@@ -6,9 +6,6 @@
 <input type="hidden" #selection>
 
 <div class="card-container">
-  <div class="card card-small" (click)="selection.value = 'playgame'" tabindex="0">
-    <span>Start Game</span>
-  </div>
 
   <div class="card card-small" (click)="selection.value = 'infolink'" tabindex="0">
     <span>Recycling Info</span>
@@ -27,26 +24,18 @@
   </div>
 </div>
 
-<div id="bottomcirclebutton">
-    <a class="circle-link-pitt" title="Pitt" href="https://my.pitt.edu/" target="_blank" rel="noopener">
-        <svg alt="Pitt Logo" xmlns="https://en.wikipedia.org/wiki/Pittsburgh_Panthers#/media/File:Pitt_Panthers_wordmark.svg" width="21.762" height="23.447" viewBox="0 0 21.762 23.447">
-        </svg>
-    </a>
-
-    <a class="circle-link-recycling" title="Recycling" href="https://www.sustainable.pitt.edu/" target="_blank" rel="noopener">
-        <svg alt="Pitt Logo" xmlns="https://en.wikipedia.org/wiki/Pittsburgh_Panthers#/media/File:Pitt_Panthers_wordmark.svg" width="21.762" height="23.447" viewBox="0 0 21.762 23.447">
-        </svg>
-    </a>
-</div>
+<body>
+  <div>
+    <div class="imagecontainer">
+      <img src="assets/img/gamepreview.png" alt="sustainability">
+      <button class="cardplay" (click) = "selection.value = 'playgame'" tabindex = "0">
+        <span>PLAY GAME</span>
+      </button>
+    </div>
+  </div>
+</body>
 
 <div id="sustainabilitylogo">
     <img src="assets/img/PittSustainability2.png" alt="sustainability" width=350px; height=50px; style = "position: fixed; bottom: 20px; left: 20px;">
 </div>
 
-<div id="pittlogo">
-    <img src="assets/img/pittlogo.png" alt="pitt" width=110px; height=50px; style = "position: fixed; bottom: 20px; right: 20px;">
-</div>
-
-<!-- <div id="background">
-    <img src="assets/img/schenley.png" alt="park" width=500px; height=500px; style = "position: fixed; bottom: 20px; right: 20px;">
-</div> -->
