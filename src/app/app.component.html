@@ -7,20 +7,67 @@
 
 <div class="card-container">
 
-  <div class="card card-small" (click)="selection.value = 'infolink'" tabindex="0">
-    <span>Recycling Info</span>
+  <div class="card card-small instructions" (click)="selection.value = 'instructions'" tabindex="0">
+    <span>Game Instructions</span>
+    <div class="dropdown-content3">
+      <div>
+        <span>Movement: Arrow Keys</span>
+      </div>
+      <div>
+        <span>Shoot: Space Bar</span>
+      </div>
+      <div>
+        <span>C, V: Swap Weapons</span>
+      </div>
+      <div>
+        <span>ESC: Pause</span>
+      </div>
+    </div>
   </div>
 
-  <div class="card card-small" (click)="selection.value = 'settings'" tabindex="0">
+  <div class="card card-small settings" (click)="selection.value = 'settings'" tabindex="0">
     <span>Settings</span>
+    <div class="dropdown-content">
+      <div>
+        <span>Music</span>
+        <input type="range" min="1" max="100" value="50" class="slider" id="musicVolume">
+      </div>
+      <div>
+        <span>SFX</span>
+        <input type="range" min="1" max="100" value="50" class="slider" id="fxVolume">
+      </div>
+    </div>
   </div>
 
   <div class="card card-small" (click)="selection.value = 'leaderboards'" tabindex="0">
     <span>Leaderboards</span>
   </div>
 
-  <div class="card card-small" (click)="selection.value = 'credits'" tabindex="0">
+  <div class="card card-small credits" (click)="selection.value = 'credits'" tabindex="0">
     <span>Credits</span>
+    <div class="dropdown-content2">
+      <div>
+        <span>We who worked on this project:</span>
+      </div>
+      <div>
+        <span>Richard George</span>
+      </div>
+      <div>
+        <span>Jerry Han</span>
+      </div>
+      <div>
+        <span>Steve Ullah</span>
+      </div>
+      <div>
+        <span>Yilun Liang</span>
+      </div>
+      <div>
+        <span>Samantha Ford</span>
+      </div>
+      <div>
+        <span>And more, later, maybe...</span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -38,4 +85,3 @@
 <div id="sustainabilitylogo">
     <img src="assets/img/PittSustainability2.png" alt="sustainability" width=350px; height=50px; style = "position: fixed; bottom: 20px; left: 20px;">
 </div>
-

@@ -76,8 +76,8 @@ html {
   }
 
   .card.card-small {
-    height: 16px;
-    width: 168px;
+    height: 6%;
+    width: 10%;
   }
 
   .card-container .card:not(.highlight-card) {
@@ -87,6 +87,60 @@ html {
   .card-container .card:not(.highlight-card):hover {
     transform: translateY(-3px);
     box-shadow: 0 4px 17px rgba(0, 0, 0, 0.35);
+  }
+
+  /* SETTINGS */
+  .settings{
+    position: relative;
+    display: flex;
+    float: left;
+  }
+  .settings:hover .dropdown-content {display: block;}
+
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 100%;
+    margin-top: 50%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+  /* GAME INSTRUCTIONS */
+  .instructions{
+    position: relative;
+    display: flex;
+    float: left;
+  }
+  .instructions:hover .dropdown-content3 {display: block;}
+
+  .dropdown-content3 {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 100%;
+    margin-top: 60%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+
+    /* CREDITS */
+  .credits{
+    position: relative;
+    display: flex;
+    float: left;
+  }
+  .credits:hover .dropdown-content2 {display: block;}
+
+  .dropdown-content2 {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 100%;
+    margin-top: 90%;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
   }
 
   .card.highlight-card {
@@ -168,3 +222,4 @@ html {
   .playbutton{
     text-align: center;
   }
+
