@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="gameStyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+</head>
+<body>
+    <table id = "game_table" style="border:solid black">
+        <tr>
+            <td id = "scoreboard" colspan="2">
+                <td id="hpBox" colspan="2">HP BOX</td>
+
+            </td></tr>
+        <tr>
+            <td COLSPAN=4><canvas id = "game_layer" width = "400" height="400"></canvas></td>
+        </tr>
+        <tr>
+            <!-- <td id="astronautFace" rowspan="2"><canvas id = "astroFace" width = "94" height="100"></canvas></td> -->
+            <td id="astronautFace" rowspan="2"><img src="assets/pilotFaceNeutral.png" alt="" width = "94" height="100"></canvas></td>
+            <td id="textBox" colspan="3" class ="gtext"></td>
+        </tr>
+        <tr>
+            <td id="textileWeaponBox"><img src="assets/TextileWeapon.png" alt=""></td>
+            <td id="recyclingWeaponBox"><img src="assets/RecycleWeapon.png" alt=""></td>
+            <td id="compostWeaponBox"><img src="assets/CompostWeapon.png" alt=""></td>
+        </tr>
+    </table>
+    <script src = "canvas.js"></script>
+</body>
+</html>
