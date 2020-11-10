@@ -1,29 +1,15 @@
-/*var Vector2d = function(x,y){
-    this.x = x;
-    this.y = y;
-};
+//ENEMY PROJECTILES
+//GAME BACKGROUND IMAGE
+//HP BOX HEARTS
+//ASTRONAUT TALKING WHEN ENEMY TYPE GENERATED
+//UPDATE COLLISION DETECTION SO THAT IT CHECKS ENEMY ROWS YOU ADDED
 
-function vector_addition(v1, v2){
-    return new Vector2d(v1.x + v2.x, v1.y + v2.y);
-}
+//MAYBE HARD DIFFICULTY WHERE EACH ROW = DIFFERENT TYPE OF ENEMY
+//IF THIS IS ADDED THEN UPDATE PROJECTILE TO NOT GO THRU ENEMIES?
 
-function vector_subtraction(v1, v2){
-    return new Vector2d(v1.x - v2.x, v1.y - v2.y);
-}
-
-function vector_scalar_multiplicaton(v1, s){
-    return new Vector2d (v1.x * s, v1.y * s);
-}
-
-function vector_length(v1){
-    return Math.sqrt(v1.x * v1.x + v1.y * v1.y);
-}
-*/
-
-
-
-
-
+//DO THIS//
+//IF ENEMIES GET TO BOTTOM THEN LOSE A LIFE AND THEY GO BACK TO TOP
+//DO THIS//
 
 
 document.addEventListener("keydown",key_down_handler,false);
@@ -34,6 +20,8 @@ document.addEventListener("keypress",key_press_handler,false);
 var canvas = document.getElementById("game_layer");
 var context = canvas.getContext("2d");
 
+var enemyFiring = false;
+
 var move_left = false;
 var move_right = false;
 var weapon_up = false;
@@ -43,11 +31,24 @@ var playerWidth = 30;
 var playerHeight = 40;
 var projectileWidth = 6;
 var projectileHeight = 10;
+var enemyWidth = 20;
+var enemyHeight = 20;
 var enemiesKilled = 0;
+
+var HP = 3;
+
 //trash and weaponNames indexes coordinate with eachother
 var trash = ["textile", "recycling", "compost"];
+var textileEnemies = ["socks", "pants", "shirt"];
+var recyclingEnemies = ["can", "paper", "bottle"];
+var compostEnemies = ["pizza", "apple", "broccoli"];
+//var specEnemies = ["socks", "pants", "shirt", "can", "paper", "bottle", "pizza", "apple", "broccoli"];
 var weaponNames = ["Trash Teleporter", "Recycling Rocket", "Compost Cannon"];
 var currWeapon = 0;
+var gameRunning = false;
+//
+var leftMostCol = 0;
+var rightMostCol = 8;
 
 var score = 0;
 
@@ -89,7 +90,6 @@ function key_up_handler(event){
         }
         else //else the projectile is on screen so we only increment the currWeapon
         {
-            //document.write("UP");
             if(currWeapon==(trash.length-1))
             {
                 currWeapon = 0;
@@ -134,6 +134,17 @@ function key_up_handler(event){
             }
         }
     }
+    else if(event.keyCode == 81)
+    {
+        if(gameRunning)
+        {
+            gameRunning = false;
+        }
+        else
+        {
+            gameRunning = true;
+        }
+    }
 
 }
 
@@ -152,7 +163,6 @@ function key_press_handler(event){
         }
         weapon_shoot = true;
     }
-
 }
 
 function Projectile(x, y){
@@ -237,19 +247,26 @@ function Enemy(x, y){
     this.width = 20;
     this.height = 20;
     this.direction = -1;
-    this.speedy = 0.1
+    this.speedy = 0.2;
     this.alive = true;
     this.trashType;
-    this.weapon;
+    this.specTrashType;
+    this.weapon = new Projectile(this.x, this.y);
     this.img = new Image();
 }
 Enemy.prototype.draw = function()
 {
     if(this.alive)
     {
-        if(this.trashType == trash[0]){this.img.src="assets/textileEnemy1.png";}
-        else if(this.trashType == trash[1]){this.img.src="assets/recyclingEnemy1.png";}
-        else if(this.trashType == trash[2]){this.img.src="assets/compostEnemy1.png";}
+        if(this.specTrashType == textileEnemies[0]){this.img.src="assets/textileEnemy1.png";}
+        else if(this.specTrashType == textileEnemies[1]){this.img.src="assets/textileEnemy2.png";}
+        else if(this.specTrashType == textileEnemies[2]){this.img.src="assets/textileEnemy3.png";}
+        else if(this.specTrashType == recyclingEnemies[0]){this.img.src="assets/recyclingEnemy1.png";}
+        else if(this.specTrashType == recyclingEnemies[1]){this.img.src="assets/recyclingEnemy2.png";}
+        else if(this.specTrashType == recyclingEnemies[2]){this.img.src="assets/recyclingEnemy3.png";}
+        else if(this.specTrashType == compostEnemies[0]){this.img.src="assets/compostEnemy1.png";}
+        else if(this.specTrashType == compostEnemies[1]){this.img.src="assets/compostEnemy2.png";}
+        else if(this.specTrashType == compostEnemies[2]){this.img.src="assets/compostEnemy3.png";}
         //context.fillStyle = "green";
         context.drawImage(this.img, this.x, this.y);
     }
@@ -257,8 +274,10 @@ Enemy.prototype.draw = function()
     {
         //if not alive, remove from screen by making coordinates large and negative
         //may be better way to do this
-        this.x=-1000;
-        this.y=-1000;
+        //this.x=-1000;
+        //this.y=-1000;
+        //context.fillStyle = 'rgba(225,225,225,0.5)';
+        //context.fillRect(this.x,this.y,this.width,this.height);
     }
 };
 
@@ -266,11 +285,109 @@ Enemy.prototype.update = function(){
 
     this.x = this.x + this.direction * this.speedy;
     //if the 1st or Last enemy hits the canvas end, drop and switch directions
-    if (leftEnemy.x <= 0 || rightEnemy.x + this.width >= canvas.width){
+    /* if(this == enemy1)
+    {
+        if(!enemyFiring)
+        {
+            enemyFiring = true;
+        }
+        else
+        {
+            if(enemy1.weapon.y >= canvas.height)
+            {
+                enemyFiring = false;
+                enemy1.weapon.y == -1000;
+            }
+        }
+    } */
+    if (leftEnemy.x <= 0){
+        enemiesDrop("l");
+    }
+    else if(rightEnemy.x + this.width >= canvas.width)
+    {
+        enemiesDrop("r");
+    }
+    /* if (leftEnemy.x <= 0 || rightEnemy.x + this.width >= canvas.width){
         this.direction = this.direction * -1;
         this.y += (this.height/2);
+    } */
+    if(this.y >= player_y - (playerHeight/2))
+    {
+        respawnAliveEnemies(enemies);
     }
     
+}
+
+function enemiesDrop(dir)
+{
+    if(dir == "l"){
+        for(var i = 0; i < 9; i++)
+        {
+            if(i == leftMostCol)
+            {
+                enemiesR3[i].x = 1;
+                enemiesR2[i].x = 1;
+                enemiesR1[i].x = 1;
+                enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                enemiesR3[i].y += (enemyHeight/2);
+                enemiesR2[i].y += (enemyHeight/2);
+                enemiesR1[i].y += (enemyHeight/2);
+            }
+            else if(i > leftMostCol){
+                //if(enemiesR3[i].alive){
+                    enemiesR3[i].x = enemiesR3[i-1].x+40;
+                    enemiesR3[i].y += (enemyHeight/2)
+                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                //}
+                //if(enemiesR2[i].alive){
+                    enemiesR2[i].x = enemiesR2[i-1].x+40;
+                    enemiesR2[i].y += (enemyHeight/2);
+                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                //}
+                //if(enemiesR1[i].alive){
+                    enemiesR1[i].x = enemiesR1[i-1].x+40;
+                    enemiesR1[i].y += (enemyHeight/2);
+                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                //}
+            }
+        }
+    }
+    else if(dir == "r"){
+        for(var i = 8; i >= 0; i--)
+        {
+            if(i == rightMostCol)
+            {
+                enemiesR3[i].x = canvas.width-enemyWidth-1;
+                enemiesR2[i].x = canvas.width-enemyWidth-1;
+                enemiesR1[i].x = canvas.width-enemyWidth-1;
+                enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                enemiesR3[i].y += (enemyHeight/2);
+                enemiesR2[i].y += (enemyHeight/2);
+                enemiesR1[i].y += (enemyHeight/2);
+            }
+            else if(i < rightMostCol){
+                //if(enemiesR3[i].alive){
+                    enemiesR3[i].x = enemiesR3[i+1].x-40;
+                    enemiesR3[i].y += (enemyHeight/2)
+                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                //}
+                //if(enemiesR2[i].alive){
+                    enemiesR2[i].x = enemiesR2[i+1].x-40;
+                    enemiesR2[i].y += (enemyHeight/2);
+                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                //}
+                //if(enemiesR1[i].alive){
+                    enemiesR1[i].x = enemiesR1[i+1].x-40;
+                    enemiesR1[i].y += (enemyHeight/2);
+                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                //}
+            }
+        }
+    }
 }
 
 //function to detect whether projectile has hit an enemy
@@ -304,34 +421,20 @@ function collisionDetection(enemies) {
                 enemiesKilled++;
                 if(enemiesKilled >= enemies.length)
                 {
-                    document.write("YOU WIN!");
+                    //document.write("YOU WIN!");
+                    respawnEnemies(enemies);
+                    leftEnemy = enemy19;
+                    rightEnemy = enemy27;
+                    leftMostCol = 0;
+                    rightMostCol = 8;
+                    enemiesKilled = 0;
                 }
-
-                //if we shot the leftmost or rightmost enemy, update
-                if(currEnemy == leftEnemy)
+                else if(currEnemy == leftEnemy || currEnemy == rightEnemy) //else if we shot the leftmost or rightmost enemy, update
                 {
-                    for(j = (k+1); j<enemies.length; j++)
-                    {
-                        if(enemies[j].alive)
-                        {
-                            leftEnemy = enemies[j];
-                            break;
-                        }
-                    }
-                }
-                else if(currEnemy == rightEnemy)
-                {
-                    for(j = (enemies.length-1); j>=0; j--)
-                    {
-                        if(enemies[j].alive)
-                        {
-                            rightEnemy = enemies[j];
-                            break;
-                        }
-                    }
+                    updateEndEnemies(enemies, currEnemy);
                 }
             }
-            else
+            else if(projectile.trashType != currEnemy.trashType && currEnemy.alive)
             {
                 textBox.textContent = "Looks like you're using the wrong weapon! That's a " + currEnemy.trashType + " enemy.";
             }
@@ -362,6 +465,7 @@ function itsAHit(proj, currEnemy)
     }
 }
 
+//updates the weaponBox's class based on whether it is chosen or not
 function updateWeaponBox(currWeap)
 {
     if(currWeap == 0)
@@ -384,16 +488,33 @@ function updateWeaponBox(currWeap)
     }
 }
 
-function generateEnemyType(enemyArr)
-{
+//generates the same enemy type for all enemies
+function easyEnemyTypeGen(enemyArr)
+{   //random # between 0-2 for enemy type
     var randNum = Math.floor(Math.random() * 3);
+
+    //another random #between 0-2 for specific enemy type (for images)
+    var randNum2 = Math.floor(Math.random() * 3);
     for(i = 0; i < enemyArr.length; i++)
     {
         enemyArr[i].trashType=trash[randNum];
+        if(randNum == 0)
+        {
+            enemyArr[i].specTrashType = textileEnemies[randNum2];
+        }
+        else if(randNum == 1)
+        {
+            enemyArr[i].specTrashType = recyclingEnemies[randNum2];
+        }
+        else if(randNum == 2)
+        {
+            enemyArr[i].specTrashType = compostEnemies[randNum2];
+        }
     }
     return randNum;
 }
 
+//updates what the astronaut says based on enemy type
 function astronautTalks(trashNum)
 {
     if(trashNum == 0)
@@ -411,29 +532,173 @@ function astronautTalks(trashNum)
     }
 }
 
+/* for when the player loses the game*/
+function youLose()
+{
+    document.write("YOU LOST!<br>Score = " + score);
+}
+
+/* used to update the rightmost/leftmost enemies when they are shot 
+    so that the enemy rows will know when the end enemy hits the canvas end*/
+function updateEndEnemies(enemyArr ,currEnemy)
+{
+        //if we shot the leftmost or rightmost enemy, update
+        if(currEnemy == leftEnemy)
+        {
+            while(leftMostCol < 9){
+                if(enemiesR3[leftMostCol].alive)
+                {
+                    leftEnemy = enemiesR3[leftMostCol];
+                    break;
+                }
+                else if(enemiesR2[leftMostCol.alive])
+                {
+                    leftEnemy = enemiesR2[leftMostCol];
+                    break;
+                }
+                else if(enemiesR1[leftMostCol].alive)
+                {
+                    leftEnemy = enemiesR1[leftMostCol];
+                    break;
+                }
+                leftMostCol++;
+            }
+
+            /* for(j = (k+1); j<enemyArr.length; j++)
+            {
+                if(enemyArr[j].alive)
+                {
+                    leftEnemy = enemyArr[j];
+                    break;
+                }
+            } */
+        }
+        if(currEnemy == rightEnemy)
+        {
+            while(rightMostCol >= 0){
+                if(enemiesR3[rightMostCol].alive)
+                {
+                    rightEnemy = enemiesR3[rightMostCol];
+                    break;
+                }
+                else if(enemiesR2[rightMostCol.alive])
+                {
+                    rightEnemy = enemiesR2[rightMostCol];
+                    break;
+                }
+                else if(enemiesR1[rightMostCol].alive)
+                {
+                    rightEnemy = enemiesR1[rightMostCol];
+                    break;
+                }
+                rightMostCol--;
+            }
+
+            /* for(j = (enemyArr.length-1); j>=0; j--)
+            {
+                if(enemyArr[j].alive)
+                {
+                    rightEnemy = enemyArr[j];
+                    break;
+                }
+            } */
+        }
+}
+
+/* respawns enemies after current wave has all been killed. 
+    basically it just resets their coordinates and alive boolean */
+function respawnEnemies(enemyArr)
+{
+    for(i = 0; i < enemies.length; i++)
+    {
+        enemies[i].alive = true;
+        if(i<9)
+        {
+            enemyArr[i].y = 20;
+        }
+        else if(i>=9 && i <18)
+        {
+            enemyArr[i].y = 60;
+        }
+        else if(i>=18 && i < 27)
+        {
+            enemyArr[i].y = 100;
+        }
+        var iMod = i % 9;
+        enemyArr[i].x = 30 + (40*iMod);  
+        enemyArr[i].direction = -1; 
+    }
+}
+
+/* respawns alive enemies after they hit the bottom */
+    function respawnAliveEnemies(enemyArr)
+    {
+        HP--;
+        HPBox.textContent = "HP = " + HP;
+        for(i = 0; i < enemies.length; i++)
+        {
+            if(i<9)
+            {
+                enemyArr[i].y = 20;
+            }
+            else if(i>=9 && i <18)
+            {
+                enemyArr[i].y = 60;
+            }
+            else if(i>=18 && i < 27)
+            {
+                enemyArr[i].y = 100;
+            }
+            var iMod = i % 9;
+            enemyArr[i].x = 30 + (40*iMod);
+            enemyArr[i].direction = -1;
+            enemyArr[i].speedy = (enemyArr[i].speedy*2);
+        }
+    }
+
 var player_x = canvas.width/2;
-//var player_y = 175;
 var player_y = 366;
 var player1 = new Player(player_x, player_y);
 var projectile = new Projectile(player_x,player_y-(projectileHeight/2));
-var enemy1 = new Enemy(30,25);
-var enemy2 = new Enemy(70,25);
-var enemy3 = new Enemy(110,25);
-var enemy4 = new Enemy(150,25);
-var enemy5 = new Enemy(190,25);
-var enemy6 = new Enemy(230,25);
-var enemy7 = new Enemy(270,25);
-var enemy8 = new Enemy(310,25);
-var enemy9 = new Enemy(350,25);
-var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9];
-var enemyNum = generateEnemyType(enemies);
+var enemy1 = new Enemy(30,20);
+var enemy2 = new Enemy(70,20);
+var enemy3 = new Enemy(110,20);
+var enemy4 = new Enemy(150,20);
+var enemy5 = new Enemy(190,20);
+var enemy6 = new Enemy(230,20);
+var enemy7 = new Enemy(270,20);
+var enemy8 = new Enemy(310,20);
+var enemy9 = new Enemy(350,20);
+var enemy10 = new Enemy(30,60);
+var enemy11 = new Enemy(70,60);
+var enemy12 = new Enemy(110,60);
+var enemy13 = new Enemy(150,60);
+var enemy14 = new Enemy(190,60);
+var enemy15 = new Enemy(230,60);
+var enemy16 = new Enemy(270,60);
+var enemy17 = new Enemy(310,60);
+var enemy18 = new Enemy(350,60);
+var enemy19 = new Enemy(30,100);
+var enemy20 = new Enemy(70,100);
+var enemy21 = new Enemy(110,100);
+var enemy22 = new Enemy(150,100);
+var enemy23 = new Enemy(190,100);
+var enemy24 = new Enemy(230,100);
+var enemy25 = new Enemy(270,100);
+var enemy26 = new Enemy(310,100);
+var enemy27 = new Enemy(350,100);
+var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27];
+var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9];
+var enemiesR2 = [enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18];
+var enemiesR3 = [enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27];
+var enemyNum = easyEnemyTypeGen(enemies);
 var textBox = document.getElementById("textBox");
 astronautTalks(enemyNum);
 
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
-var leftEnemy = enemy1;
-var rightEnemy = enemy9;
+var leftEnemy = enemy19;
+var rightEnemy = enemy27;
 //initialize scoreboard
 var scoreboard = document.getElementById("scoreboard");
 scoreboard.textContent="Score: " + score;
@@ -445,15 +710,13 @@ recyclingWeaponBox.className = "unchosenWeapon";
 var compostWeaponBox = document.getElementById("compostWeaponBox");
 compostWeaponBox.className = "unchosenWeapon";
 
-var BGImage = new Image();
-BGImage.src = "/assets/GameBackdrop1.png";
+var HPBox = document.getElementById("hpBox");
 
 function execution() {
     var canvas = document.getElementById("game_layer");
     var context = canvas.getContext("2d");
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-
     player1.update();
     player1.draw();
 
@@ -461,6 +724,12 @@ function execution() {
         collisionDetection(enemies);
         projectile.update();
         projectile.draw();
+    }
+
+    if(enemyFiring)
+    {
+        enemy1.weapon.update();
+        enemy1.weapon.draw();
     }
     
     /* for(i = 0; i < enemies.length; i++)
@@ -495,6 +764,61 @@ function execution() {
     
     enemy9.update();
     enemy9.draw();
+
+    enemy10.update();
+    enemy10.draw();
+
+    enemy11.update();
+    enemy11.draw();
+
+    enemy12.update();
+    enemy12.draw();
+    
+    enemy13.update();
+    enemy13.draw();
+    
+    enemy14.update();
+    enemy14.draw();
+    
+    enemy15.update();
+    enemy15.draw();
+    
+    enemy16.update();
+    enemy16.draw();
+    
+    enemy17.update();
+    enemy17.draw();
+    
+    enemy18.update();
+    enemy18.draw();
+
+    enemy19.update();
+    enemy19.draw();
+
+    enemy20.update();
+    enemy20.draw();
+
+    enemy21.update();
+    enemy21.draw();
+
+    enemy22.update();
+    enemy22.draw();
+    
+    enemy23.update();
+    enemy23.draw();
+    
+    enemy24.update();
+    enemy24.draw();
+    
+    enemy25.update();
+    enemy25.draw();
+    
+    enemy26.update();
+    enemy26.draw();
+    
+    enemy27.update();
+    enemy27.draw();
+    
 
     
     window.requestAnimationFrame(execution);
