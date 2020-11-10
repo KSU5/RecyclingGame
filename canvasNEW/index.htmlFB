@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="gameStyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Canvas</title>
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+
+
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyCn3S2xi1Nx_GJ8IXH2OKlRO9EwSWEPtt4",
+        authDomain: "recyclinggame-9c011.firebaseapp.com",
+        databaseURL: "https://recyclinggame-9c011.firebaseio.com",
+        projectId: "recyclinggame-9c011",
+        storageBucket: "recyclinggame-9c011.appspot.com",
+        messagingSenderId: "610682367885",
+        appId: "1:610682367885:web:49f417802095b33a3b17c4",
+        measurementId: "G-1Z430N8MS7"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    </script>
+</head>
+<body>
+    <table id = "game_table" style="border:solid black">
+        <tr>
+            <td id = "scoreboard" colspan="2">
+                <td id="hpBox" colspan="2">HP = 3</td>
+
+            </td></tr>
+        <tr>
+            <td COLSPAN=4><canvas id = "game_layer" width = "400" height="400"></canvas></td>
+        </tr>
+        <tr>
+            <!-- <td id="astronautFace" rowspan="2"><canvas id = "astroFace" width = "94" height="100"></canvas></td> -->
+            <td id="astronautFace" rowspan="2"><img src="assets/pilot.png" alt="" width = "94" height="100"></canvas></td>
+            <td id="textBox" colspan="3" class ="gtext"></td>
+        </tr>
+        <tr>
+            <td id="textileWeaponBox"><img src="assets/TextileWeapon.png" alt=""></td>
+            <td id="recyclingWeaponBox"><img src="assets/RecycleWeapon.png" alt=""></td>
+            <td id="compostWeaponBox"><img src="assets/CompostWeapon.png" alt=""></td>
+        </tr>
+    </table>
+    <script src = "canvas.js"></script>
+</body>
+</html>
