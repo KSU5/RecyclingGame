@@ -231,7 +231,12 @@ Player.prototype.update = function(){
             player_x = this.x;
         }
     }
-    this.user_id = user_id;
+    if(user_id == null){
+        this.user_id = "Unknown Player";
+    }else{
+        this.user_id = user_id;
+    }
+        
     
 };
 
@@ -309,7 +314,13 @@ function collisionDetection(enemies) {
                 if(enemiesKilled >= enemies.length)
                 {
                     document.write("YOU WIN!");
-                    document.write("\nName: " + user_id + " Score: " +score);
+                    if(user_id == null){
+                        user_id = "Unknown Player"
+                        document.write("\nName: " + "Unknown Player" + " Score: " +score);
+                    }      
+                    else{
+                        document.write("\nName: " + user_id + " Score: " +score);
+                    }
                 }
 
                 //if we shot the leftmost or rightmost enemy, update
