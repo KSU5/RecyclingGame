@@ -204,7 +204,8 @@ Projectile.prototype.update = function(){
 }
 
 
-function Player(x, y){
+function Player(x, y, user_id){
+    this.id = user_id;
     this.x = x;
     this.y = y;
     this.width = playerWidth;
@@ -240,6 +241,11 @@ Player.prototype.update = function(){
             this.x -= this.speedx;
             player_x = this.x;
         }
+    }
+    if(user_id == null){
+        this.user_id = "Unknown Player";
+    }else{
+        this.user_id = user_id;
     }
     
 };
@@ -431,6 +437,13 @@ function collisionDetection(enemies) {
                     leftMostCol = 0;
                     rightMostCol = 8;
                     enemiesKilled = 0;
+                    if(user_id == null){
+                        user_id = "Unknown Player"
+                        document.write("\nName: " + "Unknown Player" + " Score: " +score);
+                    }      
+                    else{
+                        document.write("\nName: " + user_id + " Score: " +score);
+                    }
                 }
                 else if(currEnemy == leftEnemy || currEnemy == rightEnemy) //else if we shot the leftmost or rightmost enemy, update
                 {
@@ -668,9 +681,10 @@ function respawnEnemies(enemyArr)
         }
     }
 
+var user_id = prompt("Please enter you name");
 var player_x = canvas.width/2;
 var player_y = 366;
-var player1 = new Player(player_x, player_y);
+var player1 = new Player(player_x, player_y, user_id);
 var projectile = new Projectile(player_x,player_y-(projectileHeight/2));
 var enemy1 = new Enemy(30,20);
 var enemy2 = new Enemy(70,20);
