@@ -39,10 +39,10 @@ var HP = 3;
 
 //trash and weaponNames indexes coordinate with eachother
 var trash = ["textile", "recycling", "compost"];
-var textileEnemies = ["socks", "pants", "shirt"];
-var recyclingEnemies = ["can", "paper", "bottle"];
-var compostEnemies = ["pizza", "apple", "broccoli"];
-//var specEnemies = ["socks", "pants", "shirt", "can", "paper", "bottle", "pizza", "apple", "broccoli"];
+var textileEnemies = ["socks", "jeans", "shirts"];
+var recyclingEnemies = ["cans", "paper", "plastic bottles"];
+var compostEnemies = ["pizza", "apples", "broccoli"];
+//var specEnemies = ["socks", "jeans", "shirts", "cans", "paper", "plastic bottles", "pizza", "apple", "broccoli"];
 var weaponNames = ["Trash Teleporter", "Recycling Rocket", "Compost Cannon"];
 var currWeapon = 0;
 var gameRunning = false;
@@ -161,7 +161,10 @@ function key_press_handler(event){
         {
             projectile.x = player_x + (playerWidth/2) - (projectile.width/2);
         }
-        weapon_shoot = true;
+
+        //if game isnt paused
+        if(gameRunning){
+        weapon_shoot = true;}
     }
 }
 
@@ -311,7 +314,7 @@ Enemy.prototype.update = function(){
         this.direction = this.direction * -1;
         this.y += (this.height/2);
     } */
-    if(this.y >= player_y - (playerHeight/2))
+    if(this.y >= player_y - (playerHeight/2) && this.alive)
     {
         respawnAliveEnemies(enemies);
     }
@@ -511,23 +514,30 @@ function easyEnemyTypeGen(enemyArr)
             enemyArr[i].specTrashType = compostEnemies[randNum2];
         }
     }
-    return randNum;
+    var randNums = [randNum, randNum2]
+    return randNums;
 }
 
 //updates what the astronaut says based on enemy type
-function astronautTalks(trashNum)
+function astronautTalks(trashNums)
 {
-    if(trashNum == 0)
+    if(trashNums[0] == 0)
     {
-        //textBox.textContent = "TEXT BOX";
+        if(trashNums[1] == 0){
+            textBox.textContent = "Its a cluster of " + textileEnemies[trashNums[1]] + "! Use the Textile Teleporter to send them for textile recycling";
+        }
+        else{
+            textBox.textContent = "Its a cluster of " + textileEnemies[trashNums[1]] + "! Use the Textile Teleporter to send them for thrifting at Thriftsburgh";
+        }
     }
-    else if(trashNum == 1)
+    else if(trashNums[0] == 1)
     {
-        //textBox.textContent = "TEXT BOX";
+        textBox.textContent = "Its a cluster of " + recyclingEnemies[trashNums[1]] + "! Use the Recycling Rocket to put them out for curbside recycling";
         //"Look at that cluster of beer cans! There must have been a banger last night! Use your recycling rocket to send those cans where they belong.";
     }
-    else if(trashNum == 2)
+    else if(trashNums[0] == 2)
     {
+        textBox.textContent = "Its a cluster of " + compostEnemies[trashNums[1]] + "! Use the Compost Cannon to send them to a composting bin";
         //textBox.textContent = "TEXT BOX";
     }
 }
@@ -609,6 +619,8 @@ function updateEndEnemies(enemyArr ,currEnemy)
     basically it just resets their coordinates and alive boolean */
 function respawnEnemies(enemyArr)
 {
+    var enemyNums = easyEnemyTypeGen(enemyArr);
+    astronautTalks(enemyNums);
     for(i = 0; i < enemies.length; i++)
     {
         enemies[i].alive = true;
@@ -691,9 +703,9 @@ var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, e
 var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9];
 var enemiesR2 = [enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18];
 var enemiesR3 = [enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27];
-var enemyNum = easyEnemyTypeGen(enemies);
+var enemyNums = easyEnemyTypeGen(enemies);
 var textBox = document.getElementById("textBox");
-astronautTalks(enemyNum);
+astronautTalks(enemyNums);
 
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
@@ -717,108 +729,149 @@ function execution() {
     var context = canvas.getContext("2d");
     context.fillStyle = "black";
     context.fillRect(0, 0, canvas.width, canvas.height);
-    player1.update();
-    player1.draw();
+    if(gameRunning){
+        player1.update();
+        player1.draw();
 
-    if(weapon_shoot){
-        collisionDetection(enemies);
-        projectile.update();
-        projectile.draw();
+        if(weapon_shoot){
+            collisionDetection(enemies);
+            projectile.update();
+            projectile.draw();
+        }
+
+        if(enemyFiring)
+        {
+            enemy1.weapon.update();
+            enemy1.weapon.draw();
+        }
+    
+        /* for(i = 0; i < enemies.length; i++)
+        {
+            enemies[i].update();
+            enemies[i].draw();
+        } */
+
+        enemy1.update();
+        enemy1.draw();
+
+        enemy2.update();
+        enemy2.draw();
+    
+        enemy3.update();
+        enemy3.draw();
+    
+        enemy4.update();
+        enemy4.draw();
+    
+        enemy5.update();
+        enemy5.draw();
+    
+        enemy6.update();
+        enemy6.draw();
+    
+        enemy7.update();
+        enemy7.draw();
+    
+        enemy8.update();
+        enemy8.draw();
+    
+        enemy9.update();
+        enemy9.draw();
+
+        enemy10.update();
+        enemy10.draw();
+
+        enemy11.update();
+        enemy11.draw();
+
+        enemy12.update();
+        enemy12.draw();
+    
+        enemy13.update();
+        enemy13.draw();
+    
+        enemy14.update();
+        enemy14.draw();
+    
+        enemy15.update();
+        enemy15.draw();
+    
+        enemy16.update();
+        enemy16.draw();
+    
+        enemy17.update();
+        enemy17.draw();
+    
+        enemy18.update();
+        enemy18.draw();
+
+        enemy19.update();
+        enemy19.draw();
+
+        enemy20.update();
+        enemy20.draw();
+
+        enemy21.update();
+        enemy21.draw();
+
+        enemy22.update();
+        enemy22.draw();
+    
+        enemy23.update();
+        enemy23.draw();
+    
+        enemy24.update();
+        enemy24.draw();
+    
+        enemy25.update();
+        enemy25.draw();
+    
+        enemy26.update();
+        enemy26.draw();
+    
+        enemy27.update();
+        enemy27.draw();
     }
+    else{
+        player1.draw();
 
-    if(enemyFiring)
-    {
-        enemy1.weapon.update();
-        enemy1.weapon.draw();
+        if(weapon_shoot){
+            projectile.draw();
+       }
+
+        if(enemyFiring)
+        {
+            enemy1.weapon.draw();
+        }
+
+        enemy1.draw();
+        enemy2.draw();
+        enemy3.draw();
+        enemy4.draw();
+        enemy5.draw();
+        enemy6.draw();
+        enemy7.draw();
+        enemy8.draw();
+        enemy9.draw();
+        enemy10.draw();
+        enemy11.draw();
+        enemy12.draw();
+        enemy13.draw();
+        enemy14.draw();
+        enemy15.draw();
+        enemy16.draw();
+        enemy17.draw();
+        enemy18.draw();
+        enemy19.draw();
+        enemy20.draw();
+        enemy21.draw();
+        enemy22.draw();
+        enemy23.draw();
+        enemy24.draw();
+        enemy25.draw();
+        enemy26.draw();
+        enemy27.draw();
     }
-    
-    /* for(i = 0; i < enemies.length; i++)
-    {
-        enemies[i].update();
-        enemies[i].draw();
-    } */
-
-    enemy1.update();
-    enemy1.draw();
-
-    enemy2.update();
-    enemy2.draw();
-    
-    enemy3.update();
-    enemy3.draw();
-    
-    enemy4.update();
-    enemy4.draw();
-    
-    enemy5.update();
-    enemy5.draw();
-    
-    enemy6.update();
-    enemy6.draw();
-    
-    enemy7.update();
-    enemy7.draw();
-    
-    enemy8.update();
-    enemy8.draw();
-    
-    enemy9.update();
-    enemy9.draw();
-
-    enemy10.update();
-    enemy10.draw();
-
-    enemy11.update();
-    enemy11.draw();
-
-    enemy12.update();
-    enemy12.draw();
-    
-    enemy13.update();
-    enemy13.draw();
-    
-    enemy14.update();
-    enemy14.draw();
-    
-    enemy15.update();
-    enemy15.draw();
-    
-    enemy16.update();
-    enemy16.draw();
-    
-    enemy17.update();
-    enemy17.draw();
-    
-    enemy18.update();
-    enemy18.draw();
-
-    enemy19.update();
-    enemy19.draw();
-
-    enemy20.update();
-    enemy20.draw();
-
-    enemy21.update();
-    enemy21.draw();
-
-    enemy22.update();
-    enemy22.draw();
-    
-    enemy23.update();
-    enemy23.draw();
-    
-    enemy24.update();
-    enemy24.draw();
-    
-    enemy25.update();
-    enemy25.draw();
-    
-    enemy26.update();
-    enemy26.draw();
-    
-    enemy27.update();
-    enemy27.draw();
-    
 
     
     window.requestAnimationFrame(execution);
