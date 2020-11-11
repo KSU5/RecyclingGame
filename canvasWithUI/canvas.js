@@ -27,12 +27,12 @@ var move_right = false;
 var weapon_up = false;
 var weapon_down = false;
 var weapon_shoot = false;
-var playerWidth = 30;
-var playerHeight = 40;
+var playerWidth = 45;
+var playerHeight = 60;
 var projectileWidth = 6;
 var projectileHeight = 10;
-var enemyWidth = 20;
-var enemyHeight = 20;
+var enemyWidth = 30;
+var enemyHeight = 30;
 var enemiesKilled = 0;
 
 var HP = 3;
@@ -48,7 +48,7 @@ var currWeapon = 0;
 var gameRunning = false;
 //
 var leftMostCol = 0;
-var rightMostCol = 8;
+var rightMostCol = 9;
 
 var score = 0;
 
@@ -224,7 +224,7 @@ function Player(x, y, user_id){
     this.speedx = 0.6;
     this.hp = 3;
     this.img = new Image();
-    this.img.src = "assets/spaceship.png";
+    this.img.src = "resizedAssets/spaceship.png";
 }
 Player.prototype.draw = function(){
     context.drawImage(this.img, this.x, this.y);
@@ -264,8 +264,8 @@ Player.prototype.update = function(){
 function Enemy(x, y){
     this.x = x;
     this.y = y;
-    this.width = 20;
-    this.height = 20;
+    this.width = 30;
+    this.height = 30;
     this.direction = -1;
     this.speedy = 0.2;
     this.alive = true;
@@ -278,15 +278,15 @@ Enemy.prototype.draw = function()
 {
     if(this.alive)
     {
-        if(this.specTrashType == textileEnemies[0]){this.img.src="assets/textileEnemy1.png";}
-        else if(this.specTrashType == textileEnemies[1]){this.img.src="assets/textileEnemy2.png";}
-        else if(this.specTrashType == textileEnemies[2]){this.img.src="assets/textileEnemy3.png";}
-        else if(this.specTrashType == recyclingEnemies[0]){this.img.src="assets/recyclingEnemy1.png";}
-        else if(this.specTrashType == recyclingEnemies[1]){this.img.src="assets/recyclingEnemy2.png";}
-        else if(this.specTrashType == recyclingEnemies[2]){this.img.src="assets/recyclingEnemy3.png";}
-        else if(this.specTrashType == compostEnemies[0]){this.img.src="assets/compostEnemy1.png";}
-        else if(this.specTrashType == compostEnemies[1]){this.img.src="assets/compostEnemy2.png";}
-        else if(this.specTrashType == compostEnemies[2]){this.img.src="assets/compostEnemy3.png";}
+        if(this.specTrashType == textileEnemies[0]){this.img.src="resizedAssets/textenemy2.png";}
+        else if(this.specTrashType == textileEnemies[1]){this.img.src="resizedAssets/textenemy1.png";}
+        else if(this.specTrashType == textileEnemies[2]){this.img.src="resizedAssets/textenemy3.png";}
+        else if(this.specTrashType == recyclingEnemies[0]){this.img.src="resizedAssets/recycenemy1.png";}
+        else if(this.specTrashType == recyclingEnemies[1]){this.img.src="resizedAssets/recycenemy2.png";}
+        else if(this.specTrashType == recyclingEnemies[2]){this.img.src="resizedAssets/recycenemy3.png";}
+        else if(this.specTrashType == compostEnemies[0]){this.img.src="resizedAssets/compenemy1.png";}
+        else if(this.specTrashType == compostEnemies[1]){this.img.src="resizedAssets/compenemy2.png";}
+        else if(this.specTrashType == compostEnemies[2]){this.img.src="resizedAssets/compenemy3.png";}
         //context.fillStyle = "green";
         context.drawImage(this.img, this.x, this.y);
     }
@@ -341,7 +341,7 @@ Enemy.prototype.update = function(){
 function enemiesDrop(dir)
 {
     if(dir == "l"){
-        for(var i = 0; i < 9; i++)
+        for(var i = 0; i < 10; i++)
         {
             if(i == leftMostCol)
             {
@@ -357,17 +357,17 @@ function enemiesDrop(dir)
             }
             else if(i > leftMostCol){
                 //if(enemiesR3[i].alive){
-                    enemiesR3[i].x = enemiesR3[i-1].x+40;
+                    enemiesR3[i].x = enemiesR3[i-1].x+54;
                     enemiesR3[i].y += (enemyHeight/2)
                     enemiesR3[i].direction = enemiesR3[i].direction * -1;
                 //}
                 //if(enemiesR2[i].alive){
-                    enemiesR2[i].x = enemiesR2[i-1].x+40;
+                    enemiesR2[i].x = enemiesR2[i-1].x+54;
                     enemiesR2[i].y += (enemyHeight/2);
                     enemiesR2[i].direction = enemiesR2[i].direction * -1;
                 //}
                 //if(enemiesR1[i].alive){
-                    enemiesR1[i].x = enemiesR1[i-1].x+40;
+                    enemiesR1[i].x = enemiesR1[i-1].x+54;
                     enemiesR1[i].y += (enemyHeight/2);
                     enemiesR1[i].direction = enemiesR1[i].direction * -1;
                 //}
@@ -375,7 +375,7 @@ function enemiesDrop(dir)
         }
     }
     else if(dir == "r"){
-        for(var i = 8; i >= 0; i--)
+        for(var i = 9; i >= 0; i--)
         {
             if(i == rightMostCol)
             {
@@ -391,17 +391,17 @@ function enemiesDrop(dir)
             }
             else if(i < rightMostCol){
                 //if(enemiesR3[i].alive){
-                    enemiesR3[i].x = enemiesR3[i+1].x-40;
+                    enemiesR3[i].x = enemiesR3[i+1].x-54;
                     enemiesR3[i].y += (enemyHeight/2)
                     enemiesR3[i].direction = enemiesR3[i].direction * -1;
                 //}
                 //if(enemiesR2[i].alive){
-                    enemiesR2[i].x = enemiesR2[i+1].x-40;
+                    enemiesR2[i].x = enemiesR2[i+1].x-54;
                     enemiesR2[i].y += (enemyHeight/2);
                     enemiesR2[i].direction = enemiesR2[i].direction * -1;
                 //}
                 //if(enemiesR1[i].alive){
-                    enemiesR1[i].x = enemiesR1[i+1].x-40;
+                    enemiesR1[i].x = enemiesR1[i+1].x-54;
                     enemiesR1[i].y += (enemyHeight/2);
                     enemiesR1[i].direction = enemiesR1[i].direction * -1;
                 //}
@@ -443,8 +443,8 @@ function collisionDetection(enemies) {
                 {
                     //document.write("YOU WIN!");
                     respawnEnemies(enemies);
-                    leftEnemy = enemy19;
-                    rightEnemy = enemy27;
+                    leftEnemy = enemy21;
+                    rightEnemy = enemy30;
                     leftMostCol = 0;
                     rightMostCol = 8;
                     enemiesKilled = 0;
@@ -586,7 +586,7 @@ function updateEndEnemies(enemyArr ,currEnemy)
         //if we shot the leftmost or rightmost enemy, update
         if(currEnemy == leftEnemy)
         {
-            while(leftMostCol < 9){
+            while(leftMostCol < 10){
                 if(enemiesR3[leftMostCol].alive)
                 {
                     leftEnemy = enemiesR3[leftMostCol];
@@ -655,20 +655,20 @@ function respawnEnemies(enemyArr)
     for(i = 0; i < enemies.length; i++)
     {
         enemies[i].alive = true;
-        if(i<9)
+        if(i<10)
         {
             enemyArr[i].y = 20;
         }
-        else if(i>=9 && i <18)
+        else if(i>=10 && i <20)
         {
-            enemyArr[i].y = 60;
+            enemyArr[i].y = 70;
         }
-        else if(i>=18 && i < 27)
+        else if(i>=20 && i < 30)
         {
-            enemyArr[i].y = 100;
+            enemyArr[i].y = 120;
         }
-        var iMod = i % 9;
-        enemyArr[i].x = 30 + (40*iMod);  
+        var iMod = i % 10;
+        enemyArr[i].x = 42 + (54*iMod);  
         enemyArr[i].direction = -1; 
     }
 }
@@ -682,20 +682,20 @@ function respawnEnemies(enemyArr)
             HPBox.textContent = "HP = " + HP;
             for(i = 0; i < enemies.length; i++)
             {
-                if(i<9)
+                if(i<10)
                 {
                     enemyArr[i].y = 20;
                 }
-                else if(i>=9 && i <18)
+                else if(i>=10 && i <20)
                 {
-                    enemyArr[i].y = 60;
+                    enemyArr[i].y = 70;
                 }
-                else if(i>=18 && i < 27)
+                else if(i>=20 && i < 30)
                 {
-                    enemyArr[i].y = 100;
+                    enemyArr[i].y = 120;
                 }
-                var iMod = i % 9;
-                enemyArr[i].x = 30 + (40*iMod);
+                var iMod = i % 10;
+                enemyArr[i].x = 42 + (54*iMod);
                 enemyArr[i].direction = -1;
                 enemyArr[i].speedy = (enemyArr[i].speedy*2);
             }
@@ -704,40 +704,46 @@ function respawnEnemies(enemyArr)
 
 var user_id = prompt("Please enter you name");
 var player_x = canvas.width/2;
-var player_y = 495;
+var player_y = 475;
 var player1 = new Player(player_x, player_y, user_id);
 var projectile = new Projectile(player_x,player_y-(projectileHeight/2));
-var enemy1 = new Enemy(30,20);
-var enemy2 = new Enemy(70,20);
-var enemy3 = new Enemy(110,20);
-var enemy4 = new Enemy(150,20);
-var enemy5 = new Enemy(190,20);
-var enemy6 = new Enemy(230,20);
-var enemy7 = new Enemy(270,20);
-var enemy8 = new Enemy(310,20);
-var enemy9 = new Enemy(350,20);
-var enemy10 = new Enemy(30,60);
-var enemy11 = new Enemy(70,60);
-var enemy12 = new Enemy(110,60);
-var enemy13 = new Enemy(150,60);
-var enemy14 = new Enemy(190,60);
-var enemy15 = new Enemy(230,60);
-var enemy16 = new Enemy(270,60);
-var enemy17 = new Enemy(310,60);
-var enemy18 = new Enemy(350,60);
-var enemy19 = new Enemy(30,100);
-var enemy20 = new Enemy(70,100);
-var enemy21 = new Enemy(110,100);
-var enemy22 = new Enemy(150,100);
-var enemy23 = new Enemy(190,100);
-var enemy24 = new Enemy(230,100);
-var enemy25 = new Enemy(270,100);
-var enemy26 = new Enemy(310,100);
-var enemy27 = new Enemy(350,100);
-var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27];
-var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9];
-var enemiesR2 = [enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18];
-var enemiesR3 = [enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27];
+var enemy1 = new Enemy(42,20);
+var enemy2 = new Enemy(96,20);
+var enemy3 = new Enemy(150,20);
+var enemy4 = new Enemy(204,20);
+var enemy5 = new Enemy(258,20);
+var enemy6 = new Enemy(312,20);
+var enemy7 = new Enemy(366,20);
+var enemy8 = new Enemy(420,20);
+var enemy9 = new Enemy(474,20);
+var enemy10 = new Enemy(528,20);
+
+var enemy11 = new Enemy(42,70);
+var enemy12 = new Enemy(96,70);
+var enemy13 = new Enemy(150,70);
+var enemy14 = new Enemy(204,70);
+var enemy15 = new Enemy(258,70);
+var enemy16 = new Enemy(312,70);
+var enemy17 = new Enemy(366,70);
+var enemy18 = new Enemy(420,70);
+var enemy19 = new Enemy(474,70);
+var enemy20 = new Enemy(528,70);
+
+var enemy21 = new Enemy(42,120);
+var enemy22 = new Enemy(96,120);
+var enemy23 = new Enemy(150,120);
+var enemy24 = new Enemy(204,120);
+var enemy25 = new Enemy(258,120);
+var enemy26 = new Enemy(312,120);
+var enemy27 = new Enemy(366,120);
+var enemy28 = new Enemy(420,120);
+var enemy29 = new Enemy(474,120);
+var enemy30 = new Enemy(528,120);
+
+var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
+var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10];
+var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20];
+var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
 /* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
     element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
 var enemyNums = easyEnemyTypeGen(enemies);
@@ -746,8 +752,8 @@ astronautTalks(enemyNums);
 
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
-var leftEnemy = enemy19;
-var rightEnemy = enemy27;
+var leftEnemy = enemy21;
+var rightEnemy = enemy30;
 //initialize scoreboard
 var scoreboard = document.getElementById("scoreboard");
 scoreboard.textContent="Score: " + score;
@@ -869,6 +875,15 @@ function execution() {
     
         enemy27.update();
         enemy27.draw();
+
+        enemy28.update();
+        enemy28.draw();
+    
+        enemy29.update();
+        enemy29.draw();
+    
+        enemy30.update();
+        enemy30.draw();
     }
     else{
         player1.draw();
@@ -909,6 +924,9 @@ function execution() {
         enemy25.draw();
         enemy26.draw();
         enemy27.draw();
+        enemy28.draw();
+        enemy29.draw();
+        enemy30.draw();
     }
 
     
