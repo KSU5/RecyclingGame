@@ -446,7 +446,7 @@ function collisionDetection(enemies) {
                     leftEnemy = enemy21;
                     rightEnemy = enemy30;
                     leftMostCol = 0;
-                    rightMostCol = 8;
+                    rightMostCol = 9;
                     enemiesKilled = 0;
 
                     //COMMENTED OUT TO TEST ENEMY REGEN
@@ -592,7 +592,7 @@ function updateEndEnemies(enemyArr ,currEnemy)
                     leftEnemy = enemiesR3[leftMostCol];
                     break;
                 }
-                else if(enemiesR2[leftMostCol.alive])
+                else if(enemiesR2[leftMostCol].alive)
                 {
                     leftEnemy = enemiesR2[leftMostCol];
                     break;
@@ -622,7 +622,7 @@ function updateEndEnemies(enemyArr ,currEnemy)
                     rightEnemy = enemiesR3[rightMostCol];
                     break;
                 }
-                else if(enemiesR2[rightMostCol.alive])
+                else if(enemiesR2[rightMostCol].alive)
                 {
                     rightEnemy = enemiesR2[rightMostCol];
                     break;
@@ -644,6 +644,8 @@ function updateEndEnemies(enemyArr ,currEnemy)
                 }
             } */
         }
+        console.log(leftEnemy);
+        console.log(rightEnemy);
 }
 
 /* respawns enemies after current wave has all been killed. 
