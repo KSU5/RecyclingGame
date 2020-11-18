@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="gameStyle.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pitt Green Guide Recycling Game</title>
+
+
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-app.js"></script>
+
+    <!-- TODO: Add SDKs for Firebase products that you want to use
+        https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+
+
+    <script>
+    // Your web app's Firebase configuration
+    // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+    var firebaseConfig = {
+        apiKey: "AIzaSyCn3S2xi1Nx_GJ8IXH2OKlRO9EwSWEPtt4",
+        authDomain: "recyclinggame-9c011.firebaseapp.com",
+        databaseURL: "https://recyclinggame-9c011.firebaseio.com",
+        projectId: "recyclinggame-9c011",
+        storageBucket: "recyclinggame-9c011.appspot.com",
+        messagingSenderId: "610682367885",
+        appId: "1:610682367885:web:49f417802095b33a3b17c4",
+        measurementId: "G-1Z430N8MS7"
+    };
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    firebase.analytics();
+    </script>
+
+</head>
+<body>
+    <table id ="menu_table" height = "700" width = "600" background = "assets/unanimated-back.png">
+        <tr>
+            
+            <td><img src="assets/playbutton.png"  onclick="hideTable()" ></td>
+            
+        </tr>
+        <tr>
+            <td><img src="assets/settingsbutton.png" ></td>
+        </tr>
+        <tr>
+            <td><img src="assets/highscoresbutton.png" ></td>
+        </tr>
+        <tr>
+            <td><img src="assets/creditsbutton.png" ></td>
+        </tr>
+
+    </table>
+    <script>
+        
+
+        function hideTable(){
+            document.getElementById('menu_table').style.visibility = "hidden";
+
+         } 
+
+
+    </script>
+    <!-- style="border:solid black" -->
+    <table id = "game_table" height="574" width="600" background="assets/UPDATED_UI_TOP.png">
+        <!-- <img src="assets/UPDATED_UI.png" alt=""> -->
+        <tr>
+            <td id = "scoreboard" class ="ftext"></td>
+            <td id = "emptyBoxTop"></td>
+            <td id="hpBox" class ="ftext">HP = 3</td>
+
+            </td></tr>
+        <tr>
+            <!-- Originally 400 x 400 -->
+            <td COLSPAN=3 background="assets/unanimated-back.png"><canvas id = "game_layer" width = "600" height="535"></canvas></td>
+        </tr>
+    </table>
+
+
+    <table id = "bottom_table" height="126" width="600" background="assets/UPDATED_UI_BOTTOM.png">
+        <tr>
+            <!-- <td id="astronautFace" rowspan="2"><canvas id = "astroFace" width = "94" height="100"></canvas></td> -->
+            <td id="astronautFace" rowspan="2"><img src="assets/pilot.png" alt="" width = "94" height="100"></canvas></td>
+            <td id = "emptyBoxBottom" colspan="4"></td>
+        </tr>
+        <tr>
+            <td id="textBox" class ="gtext"></td>
+            <td id="textileWeaponBox"><img src="assets/TextileWeapon.png" alt=""></td>
+            <td id="recyclingWeaponBox"><img src="assets/RecycleWeapon.png" alt=""></td>
+            <td id="compostWeaponBox"><img src="assets/CompostWeapon.png" alt=""></td>
+        </tr>
+    </table>
+    <script src = "canvas.js"></script>
+</body>
+</html>
+
+
+
