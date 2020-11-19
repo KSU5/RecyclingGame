@@ -940,7 +940,7 @@ var enemyNums = easyEnemyTypeGen(enemies);
 addEnemyImageAll(enemies);
 var textBox = document.getElementById("textBox");
 //astronautTalks(enemyNums);
-textBox.textContent = "";
+textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
 var leftEnemy = enemy21;
