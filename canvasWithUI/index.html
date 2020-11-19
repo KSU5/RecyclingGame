@@ -36,7 +36,26 @@
 
 </head>
 <body>
-    <table id = "game_table" height="574" width="600" align="center" background="assets/UPDATED_UI_TOP.png">
+<div id = "UIArea" height ="700" width = "600">
+    <table id ="menu_table" height = "700" width = "600" background = "assets/unanimated-back.png">
+        <tr>
+            
+            <td><img src="assets/playbutton.png" id="playButton" onclick="hideMenuTable()" ></td>
+            
+        </tr>
+        <tr>
+            <td><img src="assets/settingsbutton.png" ></td>
+        </tr>
+        <tr>
+            <td><img src="assets/highscoresbutton.png" ></td>
+        </tr>
+        <tr>
+            <td><img src="assets/creditsbutton.png" ></td>
+        </tr>
+
+    </table>
+    
+    <table id = "game_table" height="574" width="600" background="assets/UPDATED_UI_TOP.png">
         <tr>
             <td id = "scoreboard" class ="ftext"></td>
             <td id = "emptyBoxTop"></td>
@@ -50,7 +69,7 @@
     </table>
 
 
-    <table id = "bottom_table" height="126" width="600" align="center" background="assets/UPDATED_UI_BOTTOM2.png">
+    <table id = "bottom_table" height="126" width="600" background="assets/UPDATED_UI_BOTTOM2.png">
         <tr>
             <td id="astronautFace" rowspan="2"><img src="assets/pilot.png" alt=""></canvas></td>
             <td id="textBox" class ="gtext" rowspan="2"></td>
@@ -64,5 +83,6 @@
         </tr>
     </table>
     <script src = "canvas.js"></script>
+</div>
 </body>
 </html>

@@ -39,9 +39,13 @@ var compostEnemies = ["pizza", "apples", "broccoli"];
 var landfillEnemies = ["straws", "plastic bags", "solo cups"];
 var hitMessages = ["Nice shot!", "Bullseye!"]
 var currWeapon = 0;
+
+//gamePaused is for if the game is paused (by using the q key)
 var gamePaused = true;
-var gameRunning = true;
-//
+//gameRunning is for if the game is actually running, and not on some other menu screen
+var gameRunning = false;
+
+//to track the leftmost and rightmost columns, so wh know when end enemy hits side of canvas
 var leftMostCol = 0;
 var rightMostCol = 9;
 
@@ -52,125 +56,131 @@ const database = firebase.firestore();
 const scores = database.collection('scores');
 
 function key_down_handler(event){
-    if(event.keyCode == 39){
-        move_right = true;
-    }
-    else if(event.keyCode == 37){
-        move_left = true;
+    if(gameRunning){
+        if(event.keyCode == 39){
+            move_right = true;
+        }
+        else if(event.keyCode == 37){
+            move_left = true;
+        }
     }
 
 }
 
 function key_up_handler(event){
-    if(event.keyCode == 39){
-        move_right = false;
-    }
-    else if(event.keyCode == 37){
-        move_left = false;
-    }
-    else if(event.keyCode == 38)
-    {
-        //if the weapon isnt fired then we update both projectile type and increment currWeapon
-        if(!weapon_shoot)
+    if(gameRunning){
+        if(event.keyCode == 39){
+            move_right = false;
+        }
+        else if(event.keyCode == 37){
+            move_left = false;
+        }
+        else if(event.keyCode == 38)
         {
-            //document.write("UP");
-            if(currWeapon==(trash.length-1))
+            //if the weapon isnt fired then we update both projectile type and increment currWeapon
+            if(!weapon_shoot)
             {
-                currWeapon = 0;
-                projectile.trashType = trash[currWeapon];
-                updateWeaponBox(currWeapon);
+                //document.write("UP");
+                if(currWeapon==(trash.length-1))
+                {
+                    currWeapon = 0;
+                    projectile.trashType = trash[currWeapon];
+                    updateWeaponBox(currWeapon);
+                }
+                else
+                {
+                    currWeapon++;
+                    projectile.trashType = trash[currWeapon];
+                    updateWeaponBox(currWeapon);
+                }
+            }
+            else //else the projectile is on screen so we only increment the currWeapon
+            {
+                if(currWeapon==(trash.length-1))
+                {
+                    currWeapon = 0;
+                    updateWeaponBox(currWeapon);
+                }
+                else
+                {
+                    currWeapon++;
+                    updateWeaponBox(currWeapon);
+                }
+            }
+        }
+        else if(event.keyCode == 40)
+        {
+            //if the weapon isnt fired then we update both projectile type and decrement currWeapon
+            if(!weapon_shoot)
+            {
+                if(currWeapon==0)
+                {
+                    currWeapon = (trash.length-1);
+                    projectile.trashType = trash[currWeapon];
+                    updateWeaponBox(currWeapon);
+                }
+                else
+                {
+                    currWeapon--;
+                    projectile.trashType = trash[currWeapon];
+                    updateWeaponBox(currWeapon);
+                }
+            }
+            else //else the projectile is on screen so we only decrement the currWeapon
+            {
+                if(currWeapon==0)
+                {
+                    currWeapon = (trash.length-1);
+                    updateWeaponBox(currWeapon);
+                }
+                else
+                {
+                    currWeapon--;
+                    updateWeaponBox(currWeapon);
+                }
+            }
+        }
+        else if(event.keyCode == 81)
+        {
+            if(!gamePaused)
+            {
+                textBox.textContent = "Press the q key to resume the game!";
+                gamePaused = true;
             }
             else
             {
-                currWeapon++;
-                projectile.trashType = trash[currWeapon];
-                updateWeaponBox(currWeapon);
+                astronautTalks(enemyNums);
+                gamePaused = false;
             }
         }
-        else //else the projectile is on screen so we only increment the currWeapon
-        {
-            if(currWeapon==(trash.length-1))
+        else if(event.keyCode == 66){
+            //if projectile isnt on screen then we set its x coordinate to be the middle of the ship
+            if(!weapon_shoot)
             {
-                currWeapon = 0;
-                updateWeaponBox(currWeapon);
+                projectile.x = player_x + (playerWidth/2) - (projectile.width/2);
             }
-            else
-            {
-                currWeapon++;
-                updateWeaponBox(currWeapon);
-            }
-        }
-    }
-    else if(event.keyCode == 40)
-    {
-        //if the weapon isnt fired then we update both projectile type and decrement currWeapon
-        if(!weapon_shoot)
-        {
-            if(currWeapon==0)
-            {
-                currWeapon = (trash.length-1);
-                projectile.trashType = trash[currWeapon];
-                updateWeaponBox(currWeapon);
-            }
-            else
-            {
-                currWeapon--;
-                projectile.trashType = trash[currWeapon];
-                updateWeaponBox(currWeapon);
-            }
-        }
-        else //else the projectile is on screen so we only decrement the currWeapon
-        {
-            if(currWeapon==0)
-            {
-                currWeapon = (trash.length-1);
-                updateWeaponBox(currWeapon);
-            }
-            else
-            {
-                currWeapon--;
-                updateWeaponBox(currWeapon);
-            }
-        }
-    }
-    else if(event.keyCode == 81)
-    {
-        if(!gamePaused)
-        {
-            textBox.textContent = "Press the q key to resume the game!";
-            gamePaused = true;
-        }
-        else
-        {
-            astronautTalks(enemyNums);
-            gamePaused = false;
-        }
-    }
-    else if(event.keyCode == 66){
-        //if projectile isnt on screen then we set its x coordinate to be the middle of the ship
-        if(!weapon_shoot)
-        {
-            projectile.x = player_x + (playerWidth/2) - (projectile.width/2);
-        }
 
-        //if game isnt paused
-        if(!gamePaused){
-        weapon_shoot = true;}
+            //if game isnt paused
+            if(!gamePaused){
+            weapon_shoot = true;}
+        }
     }
 
 }
 
 function key_press_handler(event){
-    if(event.keyCode == 38){
+    if(gameRunning){
+        if(event.keyCode == 38){
         weapon_up = true;
-    }   
-    else if(event.keyCode == 40){
+        }   
+        else if(event.keyCode == 40){
         weapon_down = true;
-    }
-    //Press 'shift + L' to instantly lose the game. Rip this out on final build
-    else if(event.keyCode == 76)
-    {
-        youLose();
+        }
+        //Press 'shift + L' to instantly lose the game. Rip this out on final build
+        else if(event.keyCode == 76)
+        {
+            youLose();
+        }
     }
 }
 
@@ -930,7 +940,7 @@ var enemyNums = easyEnemyTypeGen(enemies);
 addEnemyImageAll(enemies);
 var textBox = document.getElementById("textBox");
 //astronautTalks(enemyNums);
-textBox.textContent = "Press the q key to play the game!";
+textBox.textContent = "";
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
 var leftEnemy = enemy21;
@@ -952,8 +962,12 @@ weaponNameBox.textContent = weaponNames[currWeapon];
 
 var HPBox = document.getElementById("hpBox");
 
-function execution() {
-    if(gameRunning){
+// var playButton = document.getElementById("playButton");
+// playButton.onclick = hideMenuTable();
+// playButton.addEventListener("click", hideMenuTable());
+
+function execution(gameRunning1) {
+    if(gameRunning1){
         
         var canvas = document.getElementById("game_layer");
         var context = canvas.getContext("2d");
@@ -1118,5 +1132,13 @@ function execution() {
 
 }
 
-execution();
+execution(gameRunning);
 
+function hideMenuTable(){
+    gameRunning = true;
+    gamePaused = false;
+    document.getElementById('menu_table').style.visibility = "hidden";
+    astronautTalks(enemyNums);
+    execution(gameRunning);
+    
+} 
