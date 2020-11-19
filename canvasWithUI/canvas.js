@@ -491,39 +491,34 @@ function PlayerCollisionDetection(enemyShooting) {
     }
 }
 
-//makes enemy shoot every 3 seconds if the game is runng and not paused
-const interval = setInterval(function() {
-    // method to be executed;
-    if(gameRunning && !gamePaused){
-        enemyShoot();
-    }
-  }, 3000);
 
 //function to make an enemy shoot
 function enemyShoot()
 {
-    //random # between 0-9 for enemy to fire
-    var rando = Math.floor(Math.random() * 10);
-    while(!enemiesR3[rando].alive && !enemiesR2[rando].alive && !enemiesR1[rando].alive){
-        rando = Math.floor(Math.random() * 10);
-    }
-    if(enemiesR3[rando].alive){
-        enemiesR3[rando].firing = true;
-        enemyFiring = true;
-        enemiesR3[rando].weapon.x = enemiesR3[rando].x + (enemyWidth/2) - (projectileWidth/2);
-        enemiesR3[rando].weapon.y = enemiesR3[rando].y + (enemyHeight/2);
-    }
-    else if(enemiesR2[rando].alive){
-        enemiesR2[rando].firing = true;
-        enemyFiring = true;
-        enemiesR2[rando].weapon.x = enemiesR2[rando].x + (enemyWidth/2) - (projectileWidth/2);
-        enemiesR2[rando].weapon.y = enemiesR2[rando].y + (enemyHeight/2);
-    }
-    else if(enemiesR1[rando].alive){
-        enemiesR1[rando].firing = true;
-        enemyFiring = true;
-        enemiesR1[rando].weapon.x = enemiesR1[rando].x + (enemyWidth/2) - (projectileWidth/2);
-        enemiesR1[rando].weapon.y = enemiesR1[rando].y + (enemyHeight/2);
+    if(!enemyFiring){   
+        //random # between 0-9 for enemy to fire
+        var rando = Math.floor(Math.random() * 10);
+        while(!enemiesR3[rando].alive && !enemiesR2[rando].alive && !enemiesR1[rando].alive){
+            rando = Math.floor(Math.random() * 10);
+        }
+        if(enemiesR3[rando].alive){
+            enemiesR3[rando].firing = true;
+            enemyFiring = true;
+            enemiesR3[rando].weapon.x = enemiesR3[rando].x + (enemyWidth/2) - (projectileWidth/2);
+            enemiesR3[rando].weapon.y = enemiesR3[rando].y + (enemyHeight/2);
+        }
+        else if(enemiesR2[rando].alive){
+            enemiesR2[rando].firing = true;
+            enemyFiring = true;
+            enemiesR2[rando].weapon.x = enemiesR2[rando].x + (enemyWidth/2) - (projectileWidth/2);
+            enemiesR2[rando].weapon.y = enemiesR2[rando].y + (enemyHeight/2);
+        }
+        else if(enemiesR1[rando].alive){
+            enemiesR1[rando].firing = true;
+            enemyFiring = true;
+            enemiesR1[rando].weapon.x = enemiesR1[rando].x + (enemyWidth/2) - (projectileWidth/2);
+            enemiesR1[rando].weapon.y = enemiesR1[rando].y + (enemyHeight/2);
+        }
     }
 }
 
@@ -774,8 +769,9 @@ function astronautTalks(trashNums)
 /* for when the player loses the game*/
 function youLose()
 {
-    gameRunning = false;
-    document.write("YOU LOST!<br>Score = " + score);
+    //gameRunning = false;
+    //document.write("YOU LOST!<br>Score = " + score);
+    showMenuTable();
     scores.add({
         userID: user_id,
         score: score
@@ -936,8 +932,8 @@ var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, 
 var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
 /* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
     element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
-var enemyNums = easyEnemyTypeGen(enemies);
-addEnemyImageAll(enemies);
+var enemyNums; //= easyEnemyTypeGen(enemies);
+//addEnemyImageAll(enemies);
 var textBox = document.getElementById("textBox");
 //astronautTalks(enemyNums);
 textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
@@ -947,27 +943,53 @@ var leftEnemy = enemy21;
 var rightEnemy = enemy30;
 //initialize scoreboard
 var scoreboard = document.getElementById("scoreboard");
-scoreboard.textContent="Score: " + score;
+//scoreboard.textContent="Score: " + score;
 //initialize weaponBoxes and weaponNameBox for displaying the current weapon
 var textileWeaponBox = document.getElementById("textileWeaponBox");
-textileWeaponBox.className = "chosenWeapon";
+//textileWeaponBox.className = "chosenWeapon";
 var recyclingWeaponBox = document.getElementById("recyclingWeaponBox");
-recyclingWeaponBox.className = "unchosenWeapon";
+//recyclingWeaponBox.className = "unchosenWeapon";
 var compostWeaponBox = document.getElementById("compostWeaponBox");
-compostWeaponBox.className = "unchosenWeapon";
+//compostWeaponBox.className = "unchosenWeapon";
 var landfillWeaponBox = document.getElementById("landfillWeaponBox");
-landfillWeaponBox.className = "unchosenWeapon";
+//landfillWeaponBox.className = "unchosenWeapon";
 var weaponNameBox = document.getElementById("weaponNameBox");
 weaponNameBox.textContent = weaponNames[currWeapon];
 
 var HPBox = document.getElementById("hpBox");
 
-// var playButton = document.getElementById("playButton");
-// playButton.onclick = hideMenuTable();
-// playButton.addEventListener("click", hideMenuTable());
+var interval;
+
+function setupNewGame(){
+    //makes enemy shoot every 3 seconds if the game is runng and not paused
+    interval = setInterval(enemyShoot, 3000);
+    move_left = false;
+    move_right = false;
+    weapon_up = false;
+    weapon_down = false;
+    weapon_shoot = false;
+enemiesKilled = 0;
+projectile = new Projectile(player_x,player_y-(projectileHeight/2));
+respawnEnemies(enemies);
+enemyFiring = false;
+    for(var a = 0; a < enemies.length; a++)
+    {
+        enemies[a].speedy = 0.4;
+        enemies[a].firing = false;
+    }
+    currWeapon = 0;
+    updateWeaponBox(currWeapon);
+    score = 0;
+    HP = 3;
+    scoreboard.textContent="Score: " + score;
+    HPBox.textContent = "HP = " + HP;
+    player1.x = canvas.width/2;
+    leftEnemy = enemy21;
+    rightEnemy = enemy30;
+}
 
 function execution(gameRunning1) {
-    if(gameRunning1){
+    //if(gameRunning1){
         
         var canvas = document.getElementById("game_layer");
         var context = canvas.getContext("2d");
@@ -1126,19 +1148,34 @@ function execution(gameRunning1) {
             enemy30.draw();
         }
 
-        
-        window.requestAnimationFrame(execution);
-    }
+        if(gameRunning){
+        window.requestAnimationFrame(execution);}
+        else{window.cancelAnimationFrame(execution);}
+    //}
 
 }
 
 execution(gameRunning);
 
+//to hide Main Menu table when the play button is clicked
 function hideMenuTable(){
+    //set game to runnning and not paused
     gameRunning = true;
     gamePaused = false;
+    //hide menu table
     document.getElementById('menu_table').style.visibility = "hidden";
-    astronautTalks(enemyNums);
+    //update textbox and call execution
+    setupNewGame();
     execution(gameRunning);
     
-} 
+}
+
+//to show menu table, potentially called after player loses and score is displayed?
+function showMenuTable(){
+    window.cancelAnimationFrame(execution);
+    gameRunning = false;
+    gamePaused = true;
+    textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
+    document.getElementById('menu_table').style.visibility = "visible";
+    clearInterval(interval);
+}

@@ -4,11 +4,11 @@ table
     /* background-color: #9e9e9e; */
     border-spacing: 0;
     border-collapse: collapse;
-    background-repeat: no-repeat;
 }
 
 #game_table
 {
+    background-repeat: no-repeat;
 }
 
 tr
