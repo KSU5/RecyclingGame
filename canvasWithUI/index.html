@@ -37,20 +37,27 @@
 </head>
 <body>
 <div id = "UIArea" height ="700" width = "600">
-    <table id ="menu_table" height = "700" width = "600" background = "assets/unanimated-back.png">
+    <table id ="menu_table" height = "700" width = "600" background = "assets/mainmenu1.png">
         <tr>
+            <td id = "logoArea" height="209"></td>
             
-            <td><img src="assets/playbutton.png" id="playButton" onclick="hideMenuTable()" ></td>
+        </tr>
+        <tr playButtonTR>
+            <td id="playButtonTD" height="97"><img src="assets/playbutton.png" id="playButton" onclick="hideMenuTable()" ></td>
             
         </tr>
         <tr>
-            <td><img src="assets/settingsbutton.png" ></td>
+            <td id="settingsButtonTD" height = "82"><img src="assets/settingsbutton.png" id="settingButton"></td>
         </tr>
         <tr>
-            <td><img src="assets/highscoresbutton.png" ></td>
+            <td id="highscoreButtonTD" height = "97"><img src="assets/highscoresbutton.png" id="highscoreButton"></td>
         </tr>
         <tr>
-            <td><img src="assets/creditsbutton.png" ></td>
+            <td id="creditsButtonTD" height = "97"><img src="assets/creditsbutton.png" id="credits bottom"></td>
+        </tr>
+        <tr>
+            <td id = "logoAreaBottom" height="118"></td>
+            
         </tr>
 
     </table>
@@ -69,7 +76,7 @@
     </table>
 
 
-    <table id = "bottom_table" height="126" width="600" background="assets/UPDATED_UI_BOTTOM2.png">
+    <table id = "bottom_table" height="118" width="600" background="assets/UPDATED_UI_BOTTOM2.png">
         <tr>
             <td id="astronautFace" rowspan="2"><img src="assets/pilot.png" alt=""></canvas></td>
             <td id="textBox" class ="gtext" rowspan="2"></td>

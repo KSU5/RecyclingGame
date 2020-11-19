@@ -13,7 +13,6 @@ table
 
 tr
 {
-    
     padding: 0; 
     margin: 0;
 }
@@ -169,9 +168,10 @@ td.unchosenWeapon
     height: 44px;
 }
 
-td img
+#menu_table td img
 {
-    display: block;
+    
+    padding-bottom: 15px;
     margin-left: auto;
     margin-right: auto;
 
@@ -179,8 +179,25 @@ td img
 
 #menu_table{
     position: absolute;
-    height: 574px;
-    border: 1px solid black;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#menu_table td{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 4px; 
+    margin: 0;
+}
+#menu_table tr{
+    margin: 0px;
+    padding: 0px;
+}
+
+#playButtonTR
+{
+    margin-bottom: 15px;
 }
 
 #UIArea

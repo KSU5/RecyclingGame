@@ -579,6 +579,11 @@ function enemyCollisionDetection(enemies) {
             }
             else if(projectile.trashType != currEnemy.trashType && currEnemy.alive)
             {
+                weapon_shoot = false;
+                projectile.trashType = trash[currWeapon];
+                //setting projectile y to negative value to reset it
+                //may be better way to do this
+                projectile.y = -1000;
                 textBox.textContent = "Looks like you're using the wrong weapon! That's a " + currEnemy.trashType + " enemy.";
             }
             
@@ -943,16 +948,10 @@ var leftEnemy = enemy21;
 var rightEnemy = enemy30;
 //initialize scoreboard
 var scoreboard = document.getElementById("scoreboard");
-//scoreboard.textContent="Score: " + score;
-//initialize weaponBoxes and weaponNameBox for displaying the current weapon
 var textileWeaponBox = document.getElementById("textileWeaponBox");
-//textileWeaponBox.className = "chosenWeapon";
 var recyclingWeaponBox = document.getElementById("recyclingWeaponBox");
-//recyclingWeaponBox.className = "unchosenWeapon";
 var compostWeaponBox = document.getElementById("compostWeaponBox");
-//compostWeaponBox.className = "unchosenWeapon";
 var landfillWeaponBox = document.getElementById("landfillWeaponBox");
-//landfillWeaponBox.className = "unchosenWeapon";
 var weaponNameBox = document.getElementById("weaponNameBox");
 weaponNameBox.textContent = weaponNames[currWeapon];
 
@@ -962,16 +961,16 @@ var interval;
 
 function setupNewGame(){
     //makes enemy shoot every 3 seconds if the game is runng and not paused
+    respawnEnemies(enemies);
     interval = setInterval(enemyShoot, 3000);
     move_left = false;
     move_right = false;
     weapon_up = false;
     weapon_down = false;
     weapon_shoot = false;
-enemiesKilled = 0;
-projectile = new Projectile(player_x,player_y-(projectileHeight/2));
-respawnEnemies(enemies);
-enemyFiring = false;
+    enemiesKilled = 0;
+    projectile = new Projectile(player_x,player_y-(projectileHeight/2));
+    enemyFiring = false;
     for(var a = 0; a < enemies.length; a++)
     {
         enemies[a].speedy = 0.4;
@@ -989,7 +988,7 @@ enemyFiring = false;
 }
 
 function execution(gameRunning1) {
-    //if(gameRunning1){
+    if(gameRunning){
         
         var canvas = document.getElementById("game_layer");
         var context = canvas.getContext("2d");
@@ -1148,10 +1147,9 @@ function execution(gameRunning1) {
             enemy30.draw();
         }
 
-        if(gameRunning){
-        window.requestAnimationFrame(execution);}
-        else{window.cancelAnimationFrame(execution);}
-    //}
+        window.requestAnimationFrame(execution);
+    }
+    else{window.cancelAnimationFrame(execution);}
 
 }
 
@@ -1162,10 +1160,10 @@ function hideMenuTable(){
     //set game to runnning and not paused
     gameRunning = true;
     gamePaused = false;
+    setupNewGame();
     //hide menu table
     document.getElementById('menu_table').style.visibility = "hidden";
     //update textbox and call execution
-    setupNewGame();
     execution(gameRunning);
     
 }
