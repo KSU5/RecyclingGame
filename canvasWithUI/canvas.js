@@ -398,6 +398,25 @@ function addEnemyImageRow(enemyRow)
     }
 }
 
+//adds enemy image to a single enemy based on what type it is
+function addEnemyImage(currEn)
+{
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="resizedAssets/textenemy2.png";}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="resizedAssets/textenemy1.png";}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="resizedAssets/textenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="resizedAssets/recycenemy1.png";}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="resizedAssets/recycenemy2.png";}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="resizedAssets/recycenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="resizedAssets/recycenemy4.png";}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="resizedAssets/compenemy1.png";}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="resizedAssets/compenemy2.png";}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="resizedAssets/compenemy3.png";}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="resizedAssets/landfillenemy1.png";}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="resizedAssets/landfillenemy2.png";}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="resizedAssets/landfillenemy3.png";}
+    
+}
+
 //to drop and align enemies when they hit either side of the canvas
 function enemiesDrop(dir)
 {
@@ -555,7 +574,12 @@ function enemyCollisionDetection(enemies) {
                 if(enemiesKilled >= enemies.length)
                 {
                     //document.write("YOU WIN!");
-                    respawnEnemies(enemies);
+                    enemyNums1 = enemyRowGen(enemiesR1);
+                    enemyNums2 = enemyRowGen(enemiesR2);
+                    enemyNums3 = enemyRowGen(enemiesR3);
+                    enemyNums = [];
+                    enemyNums = enemyNums3.concat(enemyNums2);
+                    enemyNums = enemyNums.concat(enemyNums1)
                     leftEnemy = enemy21;
                     rightEnemy = enemy30;
                     leftMostCol = 0;
@@ -584,7 +608,7 @@ function enemyCollisionDetection(enemies) {
                 //setting projectile y to negative value to reset it
                 //may be better way to do this
                 projectile.y = -1000;
-                textBox.textContent = "Looks like you're using the wrong weapon! That's a " + currEnemy.trashType + " enemy.";
+                wrongHitMsg(currEnemy);
             }
             
         }
@@ -617,16 +641,17 @@ function itsAHit(proj, currEnemy)
 function wrongHitMsg(hitEnemy)
 {
     if(hitEnemy.trashType == trash[0]){ //if textile
-
+       var textileString = "Looks like you're using the wrong weapon! Only 15% of used clothing in the USA is recycled, leaving landfills full of clothes that could've been recycled!";
+       textBox.textContent = textileString;
     }
     else if(hitEnemy.trashType == trash[1]){ //else if recyclable
-
+        textBox.textContent = "Looks like you're using the wrong weapon! Improperly recycling prevents resources from being reused which hurts the enviroment!";
     }
     else if(hitEnemy.trashType == trash[2]){ //else if compose
-        
+        textBox.textContent = "Looks like you're using the wrong weapon! Not composting leads to increased waste in landfills!";
     }
     else if(hitEnemy.trashType == trash[3]){ //else if landfill
-
+        textBox.textContent = "Looks like you're using the wrong weapon! Trash can contaminate other items being recycled or composted which compromises our sustainability mission!";
     }
 }
 
@@ -720,55 +745,124 @@ function enemyRowGen(enemyRow)
         enemyRow[i].trashType = trash[randNumo]
         if(randNumo == 0)
         {
-            enemyArr[i].specTrashType = textileEnemies[randNumo2];
+            enemyRow[i].specTrashType = textileEnemies[randNumo2];
         }
         else if(randNumo == 1)
         {
-            enemyArr[i].specTrashType = recyclingEnemies[randNumo2];
+            enemyRow[i].specTrashType = recyclingEnemies[randNumo2];
         }
         else if(randNumo == 2)
         {
-            enemyArr[i].specTrashType = compostEnemies[randNumo2];
+            enemyRow[i].specTrashType = compostEnemies[randNumo2];
         }
         else if(randNumo == 3)
         {
-            enemyArr[i].specTrashType = landfillEnemies[randNumo2];
+            enemyRow[i].specTrashType = landfillEnemies[randNumo2];
         }
+        addEnemyImage(enemyRow[i]);
     }
     var randNumos = [randNumo, randNumo2]
     return randNumos;
 }
 
 //updates what the astronaut says based on enemy type
-function astronautTalks(trashNums)
+function astronautTalks(trashNumxs)
 {
-    if(trashNums[0] == 0)
-    {
-        if(trashNums[1] == 0){
-            textBox.textContent = "Its a cluster of " + textileEnemies[trashNums[1]] + "! Use the " + weaponNames[0] + " to send them for textile recycling";
+    var fullString = "Its a cluster of ";
+    var endPlacesArr = [];
+    
+    for(var x = 0; x < trashNumxs.length; x+=2){
+        var endOfLife;
+        if(trashNumxs[x] == 0)
+        {
+            if(trashNumxs[x+1] == 1){
+                endOfLife = "One of Pitt's Textile Recycling Bins";
+            }
+            else {endOfLife = "Thriftsburgh";}
+
+            if(!endPlacesArr.includes(endOfLife))
+            {
+                endPlacesArr.push(endOfLife);
+            }
+
+            if(x != 4){
+                var enemy = textileEnemies[trashNumxs[x+1]];
+                fullString = fullString.concat(enemy + ", ");
+            }
+            else{
+                var enemy = textileEnemies[trashNumxs[x+1]];
+                fullString = fullString.concat(" & " + enemy);
+            }
         }
-        else{
-            textBox.textContent = "Its a cluster of " + textileEnemies[trashNums[1]] + "! Use the " + weaponNames[0] + " to send them for thrifting at Thriftsburgh";
+        else if(trashNumxs[x] == 1)
+        {
+            if(trashNumxs[x+1] == 4){
+                endOfLife = "Pitt's On-Campus Battery Recycling";
+            }
+            else {endOfLife = "Curbside Recycling";}
+
+            if(!endPlacesArr.includes(endOfLife))
+            {
+                endPlacesArr.push(endOfLife);
+            }
+
+            if(x != 4){
+                fullString = fullString.concat(recyclingEnemies[trashNumxs[x+1]] + ", ");
+            }
+            else{
+                fullString = fullString.concat(" & " + recyclingEnemies[trashNumxs[x+1]]);
+            }
+        }
+        else if(trashNumxs[x] == 2)
+        {
+            endOfLife = "A Composting Bin";
+
+            if(!endPlacesArr.includes(endOfLife))
+            {
+                endPlacesArr.push(endOfLife);
+            }
+
+            if(x != 4){
+                fullString = fullString.concat(compostEnemies[trashNumxs[x+1]] + ", ");
+            }
+            else{
+                fullString = fullString.concat(" & " + compostEnemies[trashNumxs[x+1]]);
+            }
+        }
+        else if(trashNumxs[x] == 3)
+        {
+            endOfLife = "A Trash Can";
+
+            if(!endPlacesArr.includes(endOfLife))
+            {
+                endPlacesArr.push(endOfLife);
+            }
+
+            if(x != 4){
+                fullString = fullString.concat(landfillEnemies[trashNumxs[x+1]] + ", ");
+            }
+            else{
+                fullString = fullString.concat(" & " + landfillEnemies[trashNumxs[x+1]]);
+            }
         }
     }
-    else if(trashNums[0] == 1)
+    fullString = fullString.concat("! Use the correct weapons to send them to ");
+    
+    if(endPlacesArr.length == 1)
     {
-        if(trashNums[1] == 3){
-            textBox.textContent = "Its a cluster of " + recyclingEnemies[trashNums[1]] + "! Use the " + weaponNames[1] + " to send them to Pitt's on-campus battery recycling";
-        }
-        else{
-            textBox.textContent = "Its a cluster of " + recyclingEnemies[trashNums[1]] + "! Use the " + weaponNames[1] + " to put them out for curbside recycling";
-            //"Look at that cluster of beer cans! There must have been a banger last night! Use your recycling rocket to send those cans where they belong.";
-        }
+        fullString = fullString.concat(endPlacesArr[0]);
     }
-    else if(trashNums[0] == 2)
+    else if(endPlacesArr.length == 2)
     {
-        textBox.textContent = "Its a cluster of " + compostEnemies[trashNums[1]] + "! Use the " + weaponNames[2] + " to send them to a composting bin";
+        fullString = fullString.concat(endPlacesArr[0] + " and " + endPlacesArr[1]);
     }
-    else if(trashNums[0] == 3)
+    else if(endPlacesArr.length == 3)
     {
-        textBox.textContent = "Its a cluster of " + landfillEnemies[trashNums[1]] + "! Use the " + weaponNames[3] + " to send them to a trash can";
+        fullString = fullString.concat(endPlacesArr[0] + ", " + endPlacesArr[1] + " and " + endPlacesArr[2]);
     }
+
+    textBox.textContent = fullString;
+
 }
 
 /* for when the player loses the game*/
@@ -938,7 +1032,9 @@ var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, 
 /* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
     element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
 var enemyNums; //= easyEnemyTypeGen(enemies);
-//addEnemyImageAll(enemies);
+var enemyNums1;
+var enemyNums2;
+var enemyNums3;
 var textBox = document.getElementById("textBox");
 //astronautTalks(enemyNums);
 textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
@@ -961,7 +1057,13 @@ var interval;
 
 function setupNewGame(){
     //makes enemy shoot every 3 seconds if the game is runng and not paused
-    respawnEnemies(enemies);
+    enemyNums1 = enemyRowGen(enemiesR1);
+    enemyNums2 = enemyRowGen(enemiesR2);
+    enemyNums3 = enemyRowGen(enemiesR3);
+    enemyNums = [];
+    enemyNums = enemyNums3.concat(enemyNums2);
+    enemyNums = enemyNums.concat(enemyNums1);
+    astronautTalks(enemyNums);
     interval = setInterval(enemyShoot, 3000);
     move_left = false;
     move_right = false;

@@ -116,14 +116,23 @@ img
 
 td.gtext {
     color: black;
-    font-smooth: never;
-    -webkit-font-smoothing : none;
+    font-family: "Comic Sans MS", cursive, sans-serif;
     /* text-shadow: 2px 2px 5px blue; */
-    font-size: 15px;
+    font-size: 11px;
 }
 
 td.ftext {
     color: white;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    /* text-shadow: 2px 2px 5px blue; */
+    font-size: 14px;
+}
+
+td.htext {
+    color: black;
+    font-family: "Comic Sans MS", cursive, sans-serif;
     font-smooth: never;
     -webkit-font-smoothing : none;
     /* text-shadow: 2px 2px 5px blue; */
