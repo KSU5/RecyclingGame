@@ -574,12 +574,14 @@ function enemyCollisionDetection(enemies) {
                 if(enemiesKilled >= enemies.length)
                 {
                     //document.write("YOU WIN!");
+                    respawnEnemies(enemies);
                     enemyNums1 = enemyRowGen(enemiesR1);
                     enemyNums2 = enemyRowGen(enemiesR2);
                     enemyNums3 = enemyRowGen(enemiesR3);
                     enemyNums = [];
                     enemyNums = enemyNums3.concat(enemyNums2);
-                    enemyNums = enemyNums.concat(enemyNums1)
+                    enemyNums = enemyNums.concat(enemyNums1);
+                    astronautTalks(enemyNums);
                     leftEnemy = enemy21;
                     rightEnemy = enemy30;
                     leftMostCol = 0;
@@ -932,9 +934,6 @@ function updateEndEnemies(enemyArr ,currEnemy)
     basically it just resets their coordinates and alive boolean */
 function respawnEnemies(enemyArr)
 {
-    enemyNums = easyEnemyTypeGen(enemyArr);
-    addEnemyImageAll(enemyArr);
-    astronautTalks(enemyNums);
     for(i = 0; i < enemies.length; i++)
     {
         enemies[i].alive = true;
@@ -1057,6 +1056,7 @@ var interval;
 
 function setupNewGame(){
     //makes enemy shoot every 3 seconds if the game is runng and not paused
+    respawnEnemies(enemies);
     enemyNums1 = enemyRowGen(enemiesR1);
     enemyNums2 = enemyRowGen(enemiesR2);
     enemyNums3 = enemyRowGen(enemiesR3);
