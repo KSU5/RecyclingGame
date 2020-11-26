@@ -1,0 +1,305 @@
+table
+{
+    /* border: 1px solid black; */
+    /* background-color: #9e9e9e; */
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#game_table
+{
+    background-repeat: no-repeat;
+}
+
+tr
+{
+    padding: 0; 
+    margin: 0;
+}
+
+td
+{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 0; 
+    margin: 0;
+}
+
+canvas
+{
+    display: block;
+    padding: 0; 
+    margin: 0; 
+}
+
+img
+{
+    display: block;
+    padding: 0; 
+    margin: 0; 
+}
+
+#scoreboard{
+    padding-left: 6px;
+    height: 39px;
+    width: 194px;
+    text-align: left;
+}
+#textileWeaponBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 5px;
+    font-size: 12px;
+    max-height: 82px;
+    width: 78px;
+    text-align: center;
+}
+#landfillWeaponBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 1px;
+    padding-right:4px;
+    font-size: 12px;
+    max-height: 82px;
+    width: 78px;
+    /* border: 5px solid red; */
+    text-align: center;
+}
+#recyclingWeaponBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 4px;
+    padding-right:2px;
+    font-size: 12px;
+    max-height: 82px;
+    width: 79px;
+    /* border: 1px solid black; */
+    text-align: center;
+}
+#compostWeaponBox{
+    padding-top: 5px;
+    padding-bottom: 5px;
+    padding-left: 2px;
+    padding-right:3px;
+    font-size: 12px;
+    max-height: 82px;
+    width: 78px;
+    /* border: 1px solid black; */
+    text-align: center;
+}
+#hpBox{
+    height: 39px;
+    width: 194px;
+    padding-right: 6px;
+    text-align: right;
+}
+#textBox{
+    /* border: 1px solid black; */
+    /* background-color: #616161; */
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-top: 5px;
+    height: 126px;
+    width: 161px;
+    vertical-align: top;
+    /* text-align: left; */
+    text-align: center;
+}
+
+#weaponNameBox{
+    text-align: center;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    height: 44px;
+}
+
+td.gtext {
+    color: black;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    /* text-shadow: 2px 2px 5px blue; */
+    font-size: 11px;
+}
+
+td.ftext {
+    color: white;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    /* text-shadow: 2px 2px 5px blue; */
+    font-size: 14px;
+}
+
+td.htext {
+    color: black;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    /* text-shadow: 2px 2px 5px blue; */
+    font-size: 15px;
+}
+
+#astronautFace{
+    /* background-color: #616161; */
+    height: 126px;
+    width: 126px;
+    vertical-align:bottom;text-align:center;
+    padding-bottom: 5px;
+    padding-left: 5px;
+}
+
+#game_table
+{
+    height: 540px;
+    border-collapse: separate;
+}
+
+td.chosenWeapon
+{
+    /* border: 1px solid red; */
+    background-color: white;
+    background-clip: content-box;
+}
+
+td.unchosenWeapon
+{
+}
+
+#emptyBoxTop
+{
+    height: 39px;
+    width: 212px;
+}
+
+#emptyBoxBottom
+{
+    width: 236px;
+    height: 44px;
+}
+
+#menu_table td img
+{
+    
+    padding-bottom: 15px;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+#menu_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#menu_table td{
+    box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    padding: 4px; 
+    margin: 0;
+}
+#menu_table tr{
+    margin: 0px;
+    padding: 0px;
+}
+
+#playButtonTR
+{
+    margin-bottom: 15px;
+}
+
+#UIArea
+{
+    padding:0;
+    margin:0;
+max-width: 100%;
+max-height: 100%;
+overflow:auto;
+display:block;
+position: absolute;
+left: 50%;
+transform: translateX(-50%);
+}
+
+#setting_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+#scoreboard_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+#credits_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+  }
+  
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+
+
+  #slider{
+    position: absolute;
+    top: 310px;
+    right: 200px;
+
+
+  }
+
+  #slider_2{
+    position: absolute;
+    top: 370px;
+    right: 200px;
+
+  }
+
+  #backButtonID{
+    position: absolute;
+    top: 500px;
+    right: 185px;
+
+  }
