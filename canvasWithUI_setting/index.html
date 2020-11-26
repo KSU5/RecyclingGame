@@ -69,6 +69,11 @@
             <td id = "slider_2"><input type="range" min="1" max="100" value="50" class="slider" id="myRange"></td>
         </tr>
         <tr>
+            <td class="square_button" onclick="colorBlindMode()"></td>
+
+
+        </tr>
+        <tr>
             <td id = "backButtonID"><img src = "assets/Back button.png" id = "backButton" onclick="hideSettingTable()"></td>
 
         </tr>
@@ -101,6 +106,16 @@
         function showSettingTable(){
             document.getElementById("setting_table").style.visibility = "visible";
 
+
+        }
+
+        function hideSettingTable(){
+            document.getElementById("setting_table").style.visibility = "hidden";
+
+
+        }
+        function colorBlindMode(){
+            document.getElementById("setting_table").style.visibility = "hidden";
 
         }
        

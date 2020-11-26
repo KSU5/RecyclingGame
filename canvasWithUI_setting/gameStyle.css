@@ -303,3 +303,13 @@ transform: translateX(-50%);
     right: 185px;
 
   }
+
+
+  .square_button {
+    background-color: transparent;
+    position: absolute;
+    height: 25px;
+    width: 25px;
+    top: 445px;
+    right: 170px;
+  }
