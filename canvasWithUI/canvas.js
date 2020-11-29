@@ -363,44 +363,6 @@ Enemy.prototype.update = function(){
     
 }
 
-//adds enemy image to a row of enemies based on what type it is
-//could also be used to add images to entire enemy array also
-function addEnemyImageRow(enemyRow)
-{
-    for(var y = 0; y < enemyArray.length; y++){
-        if(!colorblind){
-        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/normal/enemies/textenemy2.png";}
-        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/normal/enemies/textenemy1.png";}
-        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/normal/enemies/textenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/normal/enemies/recycenemy1.png";}
-        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/normal/enemies/recycenemy2.png";}
-        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/normal/enemies/recycenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
-        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/normal/enemies/compenemy1.png";}
-        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/normal/enemies/compenemy2.png";}
-        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/normal/enemies/compenemy3.png";}
-        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/normal/enemies/landfillenemy1.png";}
-        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/normal/enemies/landfillenemy2.png";}
-        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/normal/enemies/landfillenemy3.png";}
-    }
-    else{
-        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/textenemy2.png";}
-        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/textenemy1.png";}
-        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/textenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/recycenemy1.png";}
-        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/recycenemy2.png";}
-        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/recycenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
-        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/compenemy1.png";}
-        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/compenemy2.png";}
-        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/compenemy3.png";}
-        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy1.png";}
-        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy2.png";}
-        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy3.png";}
-    }
-    }
-}
-
 //adds enemy image to a single enemy based on what type it is
 function addEnemyImage(currEn)
 {
@@ -830,19 +792,25 @@ function astronautTalks(trashNumxs)
     var endPlacesArr = [];
     
     for(var x = 0; x < trashNumxs.length; x+=2){
+        //variable to hold the where the item is supposed to be disposed of
         var endOfLife;
+        //if the row of enemies trashNumber is 0 then it is a textile enemy
         if(trashNumxs[x] == 0)
         {
+            //if the next trashNumber is 1 then it is socks and is sent to pitts textile recycling bins
             if(trashNumxs[x+1] == 1){
-                endOfLife = "One of Pitt's Textile Recycling Bins";
+                endOfLife = "one of Pitt's textile recycling bins";
             }
-            else {endOfLife = "Thriftsburgh";}
+            else {endOfLife = "Thriftsburgh";} //or else it is jeans or a shirt, so its sent to thriftsburg
 
+            /* this checks for whether the end of life option is the same as another enemies 
+                so that it isnt repeated in the sentence, doesnt need to be changed */
             if(!endPlacesArr.includes(endOfLife))
             {
                 endPlacesArr.push(endOfLife);
             }
 
+            //this adds a comma or & to complete the sentence, doesnt need to be changed
             if(x != 4){
                 var enemy = textileEnemies[trashNumxs[x+1]];
                 fullString = fullString.concat(enemy + ", ");
@@ -852,18 +820,22 @@ function astronautTalks(trashNumxs)
                 fullString = fullString.concat(" & " + enemy);
             }
         }
-        else if(trashNumxs[x] == 1)
+        else if(trashNumxs[x] == 1) //else if the trashNumber is 1, then it is a recycling enemy
         {
-            if(trashNumxs[x+1] == 4){
-                endOfLife = "Pitt's On-Campus Battery Recycling";
+            //if the next trashNumber is 3, then it is a dead battery so it needs to be sent to pitts on campus battery recycling
+            if(trashNumxs[x+1] == 3){
+                endOfLife = "Pitt's on-campus battery recycling";
             }
-            else {endOfLife = "Curbside Recycling";}
+            else {endOfLife = "curbside recycling";} //or else it is one of the other 3 recycling items, which go to curbside recycling
 
+            /* this checks for whether the end of life option is the same as another enemies 
+                so that it isnt repeated in the sentence, doesnt need to be changed */
             if(!endPlacesArr.includes(endOfLife))
             {
                 endPlacesArr.push(endOfLife);
             }
 
+            //this just adds a comma or & to complete the sentence, doesnt need to be changed
             if(x != 4){
                 fullString = fullString.concat(recyclingEnemies[trashNumxs[x+1]] + ", ");
             }
@@ -871,15 +843,19 @@ function astronautTalks(trashNumxs)
                 fullString = fullString.concat(" & " + recyclingEnemies[trashNumxs[x+1]]);
             }
         }
-        else if(trashNumxs[x] == 2)
+        else if(trashNumxs[x] == 2) //is if trashNum is 2, then it is a composting enemy
         {
-            endOfLife = "A Composting Bin";
+            //all composting enemies go to a composting bin
+            endOfLife = "a composting bin";
 
+            /* this checks for whether the end of life option is the same as another enemies 
+                so that it isnt repeated in the sentence, doesnt need to be changed */
             if(!endPlacesArr.includes(endOfLife))
             {
                 endPlacesArr.push(endOfLife);
             }
 
+            //this just adds a comma or & to complete the sentence, doesnt need to be changed
             if(x != 4){
                 fullString = fullString.concat(compostEnemies[trashNumxs[x+1]] + ", ");
             }
@@ -887,15 +863,19 @@ function astronautTalks(trashNumxs)
                 fullString = fullString.concat(" & " + compostEnemies[trashNumxs[x+1]]);
             }
         }
-        else if(trashNumxs[x] == 3)
+        else if(trashNumxs[x] == 3) //else if trashNums is 3 then it is a landfill enemy
         {
-            endOfLife = "A Trash Can";
+            //all landfill enemies go to a trash can
+            endOfLife = "a trash can";
 
+            /* this checks for whether the end of life option is the same as another enemies 
+                so that it isnt repeated in the sentence, doesnt need to be changed */
             if(!endPlacesArr.includes(endOfLife))
             {
                 endPlacesArr.push(endOfLife);
             }
 
+            //this just adds a comma or & to complete the sentence, doesnt need to be changed
             if(x != 4){
                 fullString = fullString.concat(landfillEnemies[trashNumxs[x+1]] + ", ");
             }
