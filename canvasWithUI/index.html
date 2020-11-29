@@ -37,32 +37,46 @@
 </head>
 <body>
 <div id = "UIArea" height ="700" width = "600">
-    <table id ="menu_table" height = "700" width = "600" background = "assets/mainmenu1.png">
+    <table id ="menu_table" height = "700" width = "600" background = "allAssets/normal/UI/menus/mainmenu1.png">
         <tr>
             <td id = "logoArea" height="209"></td>
             
         </tr>
         <tr playButtonTR>
-            <td id="playButtonTD" height="97"><img src="assets/playbutton.png" id="playButton" onclick="hideMenuTable()" ></td>
+            <td id="playButtonTD" height="97"><img src="allAssets/normal/UI/buttons/playbutton.png" class="buttonz" id="playButton" onclick="playGame()" ></td>
             
         </tr>
         <tr>
-            <td id="settingsButtonTD" height = "82"><img src="assets/settingsbutton.png" id="settingButton"></td>
+            <td id="settingsButtonTD" height = "82"><img src="allAssets/normal/UI/buttons/settingsbutton.png" class="buttonz" id="settingButton" onclick="settingsMenu()"></td>
         </tr>
         <tr>
-            <td id="highscoreButtonTD" height = "97"><img src="assets/highscoresbutton.png" id="highscoreButton"></td>
+            <td id="highscoreButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/highscoresbutton.png" class="buttonz" id="highscoreButton"></td>
         </tr>
         <tr>
-            <td id="creditsButtonTD" height = "97"><img src="assets/creditsbutton.png" id="credits bottom"></td>
+            <td id="creditsButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/creditsbutton.png" class="buttonz" id="credits bottom"></td>
         </tr>
         <tr>
-            <td id = "logoAreaBottom" height="118"></td>
+            <td id = "logoAreaBottom" height="118"><img id="sustainLogo" src="allAssets/normal/UI/PittSustainability_stacked_green.png"></td>
             
         </tr>
 
     </table>
     
-    <table id = "game_table" height="574" width="600" background="assets/UPDATED_UI_TOP.png">
+    <table id = "setting_table" height = "700" width = "600" background = "allAssets/normal/UI/menus/mainmenu1.png">
+        <tr>
+            <td id = "settingPannelTD"><img src ="allAssets/normal/UI/menus/Settings Menu.png"> </td>
+            <td id = "slider"><input type="range" min="1" max="100" value="50" class="slider" id="myRange"></td>
+            <td id = "slider_2"><input type="range" min="1" max="100" value="50" class="slider" id="myRange"></td>
+        </tr>
+        <tr>
+            <td class="square_button" onclick="colorBlindMode()"><img id="checkBox" class="trans" src ="allAssets/normal/UI/overlay_assets/transparent.png"></td>
+        </tr>
+        <tr>
+            <td id = "backButtonID"><img src = "allAssets/normal/UI/buttons/backbutton.png" id = "backButton" onclick="settingsBackMenu()"></td>
+        </tr>
+    </table>
+
+    <table id = "game_table" class="hidden" height="574" width="600" background="allAssets/normal/UI/UPDATED_UI_TOP.png">
         <tr>
             <td id = "scoreboard" class ="ftext"></td>
             <td id = "emptyBoxTop"></td>
@@ -71,22 +85,22 @@
             </td></tr>
         <tr>
             <!-- Originally 400 x 400 -->
-            <td COLSPAN=3 background="assets/unanimated-back.png"><canvas id = "game_layer" width = "600" height="535"></canvas></td>
+            <td COLSPAN=3 background="allAssets/normal/UI/unanimated-back.png"><canvas id = "game_layer" width = "600" height="535"></canvas></td>
         </tr>
     </table>
 
 
-    <table id = "bottom_table" height="118" width="600" background="assets/UPDATED_UI_BOTTOM2.png">
+    <table id = "bottom_table" class="hidden" height="118" width="600" background="allAssets/normal/UI/UPDATED_UI_BOTTOM2.png">
         <tr>
-            <td id="astronautFace" rowspan="2"><img src="assets/pilot.png" alt=""></canvas></td>
+            <td id="astronautFace" rowspan="2"><img src="allAssets/normal/UI/overlay_assets/pilot.png" alt=""></canvas></td>
             <td id="textBox" class ="gtext" rowspan="2"></td>
             <td id = "weaponNameBox" class="htext" colspan="4"></td>
         </tr>
         <tr>
-            <td id="textileWeaponBox"><img src="assets/TextileWeapon2.png" alt=""></td>
-            <td id="recyclingWeaponBox"><img src="assets/RecycleWeapon.png" alt=""></td>
-            <td id="compostWeaponBox"><img src="assets/CompostWeapon.png" alt=""></td>
-            <td id="landfillWeaponBox"><img src="assets/landfillWeapon.png" alt=""></td>
+            <td id="textileWeaponBox"><img src="allAssets/normal/weapons/textileWeapon2.png" alt=""></td>
+            <td id="recyclingWeaponBox"><img src="allAssets/normal/weapons/RecycleWeapon.png" alt=""></td>
+            <td id="compostWeaponBox"><img src="allAssets/normal/weapons/CompostWeapon.png" alt=""></td>
+            <td id="landfillWeaponBox"><img src="allAssets/normal/weapons/landfillWeapon.png" alt=""></td>
         </tr>
     </table>
     <script src = "canvas.js"></script>

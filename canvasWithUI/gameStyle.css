@@ -177,7 +177,7 @@ td.unchosenWeapon
     height: 44px;
 }
 
-#menu_table td img
+.buttonz
 {
     
     padding-bottom: 15px;
@@ -199,25 +199,133 @@ td.unchosenWeapon
     padding: 4px; 
     margin: 0;
 }
+
 #menu_table tr{
     margin: 0px;
     padding: 0px;
 }
 
-#playButtonTR
+#sustainLogo
 {
-    margin-bottom: 15px;
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    width: 216px;
+    height: 72px;
 }
 
 #UIArea
 {
     padding:0;
     margin:0;
-max-width: 100%;
-max-height: 100%;
-overflow:auto;
-display:block;
-position: absolute;
-left: 50%;
-transform: translateX(-50%);
+    max-width: 100%;
+    max-height: 100%;
+    overflow: hidden;
+    display:block;
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
 }
+
+.hidden
+{
+    visibility: hidden;
+}
+
+.visible
+{
+    visibility: visible;
+}
+
+#setting_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+#scoreboard_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+#credits_table{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+    visibility: hidden;
+}
+
+
+
+.slidecontainer {
+    width: 100%; /* Width of the outside container */
+  }
+  
+  .slider {
+    -webkit-appearance: none;
+    width: 100%;
+    height: 15px;
+    border-radius: 5px;  
+    background: #d3d3d3;
+    outline: none;
+    opacity: 0.7;
+    -webkit-transition: .2s;
+    transition: opacity .2s;
+  }
+  
+  .slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%; 
+    background: #4CAF50;
+    cursor: pointer;
+  }
+  
+  .slider::-moz-range-thumb {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+  }
+
+
+  #slider{
+    position: absolute;
+    top: 310px;
+    right: 200px;
+
+
+  }
+
+  #slider_2{
+    position: absolute;
+    top: 370px;
+    right: 200px;
+
+  }
+
+  #backButtonID{
+    position: absolute;
+    top: 500px;
+    right: 185px;
+
+  }
+
+  .square_button {
+    padding: 4px;
+    text-align: center;
+    background-color: transparent;
+    position: absolute;
+    height: 27px;
+    width: 27px;
+    top: 437px;
+    right: 169px;
+  }

@@ -9,6 +9,8 @@ document.addEventListener("keydown",key_down_handler,false);
 document.addEventListener("keyup",key_up_handler,false);
 document.addEventListener("keypress",key_press_handler,false);
 
+//for colorblind mode
+var colorblind = false;
 
 var canvas = document.getElementById("game_layer");
 var context = canvas.getContext("2d");
@@ -85,12 +87,14 @@ function key_up_handler(event){
                 {
                     currWeapon = 0;
                     projectile.trashType = trash[currWeapon];
+                    addProjectileImage(projectile);
                     updateWeaponBox(currWeapon);
                 }
                 else
                 {
                     currWeapon++;
                     projectile.trashType = trash[currWeapon];
+                    addProjectileImage(projectile);
                     updateWeaponBox(currWeapon);
                 }
             }
@@ -117,12 +121,14 @@ function key_up_handler(event){
                 {
                     currWeapon = (trash.length-1);
                     projectile.trashType = trash[currWeapon];
+                    addProjectileImage(projectile);
                     updateWeaponBox(currWeapon);
                 }
                 else
                 {
                     currWeapon--;
                     projectile.trashType = trash[currWeapon];
+                    addProjectileImage(projectile);
                     updateWeaponBox(currWeapon);
                 }
             }
@@ -194,23 +200,7 @@ function Projectile(x, y){
     this.img = new Image(this.x, this.y);
 }
 Projectile.prototype.draw = function(enemyShootin){
-    if(this.trashType == trash[0]){
-        this.img.src = "assets/textileBullet.png";
-    }
-    else if(this.trashType == trash[1]){
-        this.img.src = "assets/recycleBullet.png";
-    }
-    else if(this.trashType == trash[2]){
-        this.img.src = "assets/compostBullet.png";
-    }
-    else if(this.trashType == trash[3])
-    {
-        this.img.src = "assets/landfillBullet.png";
-    }
-    else if(this.trashType == "enemy")
-    {
-        this.img.src = "assets/enemyprojectile1.png";
-    }
+
     context.drawImage(this.img, this.x, this.y);
 
     //if the projectile is an enemies projectile and reached the bottom of the game, then reset
@@ -228,6 +218,7 @@ Projectile.prototype.draw = function(enemyShootin){
         weapon_shoot = false;
         this.y = player_y - (projectileHeight/2);
         projectile.trashType = trash[currWeapon];
+        addProjectileImage(projectile);
     }
 
 }
@@ -251,7 +242,12 @@ function Player(x, y, user_id){
     this.speedx = 1.4;
     this.hp = 3;
     this.img = new Image();
-    this.img.src = "resizedAssets/spaceship.png";
+    if(colorblind){
+        this.img.src = "allAssets/colorblind/ship/spaceship.png";
+    }
+    else{
+        this.img.src = "allAssets/normal/ship/spaceship.png";
+    }
 }
 Player.prototype.draw = function(){
     context.drawImage(this.img, this.x, this.y);
@@ -303,6 +299,12 @@ function Enemy(x, y){
     this.weapon.trashType = "enemy";
     this.weapon.speedy = 4.5;
     this.img = new Image();
+    if(colorblind){
+        this.weapon.img.src = "allAssets/colorblind/bullets/enemyprojectile1.png"
+    }
+    else{
+        this.weapon.img.src = "allAssets/normal/bullets/enemyprojectile1.png";
+    }
 }
 Enemy.prototype.draw = function()
 {
@@ -314,6 +316,9 @@ Enemy.prototype.draw = function()
 
     if(this.alive)
     {
+        if(this.y + enemyHeight >= lowestY){
+            lowestY = this.y + enemyHeight;
+        }
         //context.fillStyle = "green";
         context.drawImage(this.img, this.x, this.y);
     }
@@ -358,63 +363,117 @@ Enemy.prototype.update = function(){
     
 }
 
-//adds enemy image to all enemies based on what type it is
-function addEnemyImageAll(enemyArray)
-{
-    for(var z = 0; z < enemyArray.length; z++){
-        if(enemyArray[z].specTrashType == textileEnemies[0]){enemyArray[z].img.src="resizedAssets/textenemy2.png";}
-        else if(enemyArray[z].specTrashType == textileEnemies[1]){enemyArray[z].img.src="resizedAssets/textenemy1.png";}
-        else if(enemyArray[z].specTrashType == textileEnemies[2]){enemyArray[z].img.src="resizedAssets/textenemy3.png";}
-        else if(enemyArray[z].specTrashType == recyclingEnemies[0]){enemyArray[z].img.src="resizedAssets/recycenemy1.png";}
-        else if(enemyArray[z].specTrashType == recyclingEnemies[1]){enemyArray[z].img.src="resizedAssets/recycenemy2.png";}
-        else if(enemyArray[z].specTrashType == recyclingEnemies[2]){enemyArray[z].img.src="resizedAssets/recycenemy3.png";}
-        else if(enemyArray[z].specTrashType == recyclingEnemies[3]){enemyArray[z].img.src="resizedAssets/recycenemy4.png";}
-        else if(enemyArray[z].specTrashType == compostEnemies[0]){enemyArray[z].img.src="resizedAssets/compenemy1.png";}
-        else if(enemyArray[z].specTrashType == compostEnemies[1]){enemyArray[z].img.src="resizedAssets/compenemy2.png";}
-        else if(enemyArray[z].specTrashType == compostEnemies[2]){enemyArray[z].img.src="resizedAssets/compenemy3.png";}
-        else if(enemyArray[z].specTrashType == landfillEnemies[0]){enemyArray[z].img.src="resizedAssets/landfillenemy1.png";}
-        else if(enemyArray[z].specTrashType == landfillEnemies[1]){enemyArray[z].img.src="resizedAssets/landfillenemy2.png";}
-        else if(enemyArray[z].specTrashType == landfillEnemies[2]){enemyArray[z].img.src="resizedAssets/landfillenemy3.png";}
-    }
-}
-
 //adds enemy image to a row of enemies based on what type it is
+//could also be used to add images to entire enemy array also
 function addEnemyImageRow(enemyRow)
 {
     for(var y = 0; y < enemyArray.length; y++){
-        if(enemyRow[y].specTrashType == textileEnemies[0]){enemyRow[y].img.src="resizedAssets/textenemy2.png";}
-        else if(enemyRow[y].specTrashType == textileEnemies[1]){enemyRow[y].img.src="resizedAssets/textenemy1.png";}
-        else if(enemyRow[y].specTrashType == textileEnemies[2]){enemyRow[y].img.src="resizedAssets/textenemy3.png";}
-        else if(enemyRow[y].specTrashType == recyclingEnemies[0]){enemyRow[y].img.src="resizedAssets/recycenemy1.png";}
-        else if(enemyRow[y].specTrashType == recyclingEnemies[1]){enemyRow[y].img.src="resizedAssets/recycenemy2.png";}
-        else if(enemyRow[y].specTrashType == recyclingEnemies[2]){enemyRow[y].img.src="resizedAssets/recycenemy3.png";}
-        else if(enemyRow[y].specTrashType == recyclingEnemies[3]){enemyRow[y].img.src="resizedAssets/recycenemy4.png";}
-        else if(enemyRow[y].specTrashType == compostEnemies[0]){enemyRow[y].img.src="resizedAssets/compenemy1.png";}
-        else if(enemyRow[y].specTrashType == compostEnemies[1]){enemyRow[y].img.src="resizedAssets/compenemy2.png";}
-        else if(enemyRow[y].specTrashType == compostEnemies[2]){enemyRow[y].img.src="resizedAssets/compenemy3.png";}
-        else if(enemyRow[y].specTrashType == landfillEnemies[0]){enemyRow[y].img.src="resizedAssets/landfillenemy1.png";}
-        else if(enemyRow[y].specTrashType == landfillEnemies[1]){enemyRow[y].img.src="resizedAssets/landfillenemy2.png";}
-        else if(enemyRow[y].specTrashType == landfillEnemies[2]){enemyRow[y].img.src="resizedAssets/landfillenemy3.png";}
+        if(!colorblind){
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/normal/enemies/textenemy2.png";}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/normal/enemies/textenemy1.png";}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/normal/enemies/textenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/normal/enemies/recycenemy1.png";}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/normal/enemies/recycenemy2.png";}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/normal/enemies/recycenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/normal/enemies/compenemy1.png";}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/normal/enemies/compenemy2.png";}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/normal/enemies/compenemy3.png";}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/normal/enemies/landfillenemy1.png";}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/normal/enemies/landfillenemy2.png";}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/normal/enemies/landfillenemy3.png";}
+    }
+    else{
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/textenemy2.png";}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/textenemy1.png";}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/textenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/recycenemy1.png";}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/recycenemy2.png";}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/recycenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/compenemy1.png";}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/compenemy2.png";}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/compenemy3.png";}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy1.png";}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy2.png";}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy3.png";}
+    }
     }
 }
 
 //adds enemy image to a single enemy based on what type it is
 function addEnemyImage(currEn)
 {
-        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="resizedAssets/textenemy2.png";}
-        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="resizedAssets/textenemy1.png";}
-        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="resizedAssets/textenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="resizedAssets/recycenemy1.png";}
-        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="resizedAssets/recycenemy2.png";}
-        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="resizedAssets/recycenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="resizedAssets/recycenemy4.png";}
-        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="resizedAssets/compenemy1.png";}
-        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="resizedAssets/compenemy2.png";}
-        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="resizedAssets/compenemy3.png";}
-        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="resizedAssets/landfillenemy1.png";}
-        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="resizedAssets/landfillenemy2.png";}
-        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="resizedAssets/landfillenemy3.png";}
-    
+    if(!colorblind){
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/normal/enemies/textenemy2.png";}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/normal/enemies/textenemy1.png";}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/normal/enemies/textenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/normal/enemies/recycenemy1.png";}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/normal/enemies/recycenemy2.png";}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/normal/enemies/recycenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/normal/enemies/compenemy1.png";}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/normal/enemies/compenemy2.png";}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/normal/enemies/compenemy3.png";}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/normal/enemies/landfillenemy1.png";}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/normal/enemies/landfillenemy2.png";}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/normal/enemies/landfillenemy3.png";}
+        currEn.weapon.img.src = "allAssets/normal/bullets/enemyprojectile1.png";
+    }
+    else{
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/textenemy2.png";}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/textenemy1.png";}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/textenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/recycenemy1.png";}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/recycenemy2.png";}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/recycenemy3.png";}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="allAssets/normal/enemies/recycenemy4.png";}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/compenemy1.png";}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/compenemy2.png";}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/compenemy3.png";}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy1.png";}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy2.png";}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="allAssets/colorblind/enemies/landfillenemy3.png";}
+        currEn.weapon.img.src = "allAssets/colorblind/bullets/enemyprojectile1.png"
+    }
+}
+
+//adds image of currWeapon to the players projectile
+function addProjectileImage(playerProjectile){
+    if(!colorblind){    
+        if(playerProjectile.trashType == trash[0]){
+            playerProjectile.img.src = "allAssets/normal/bullets/textileBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[1]){
+            playerProjectile.img.src = "allAssets/normal/bullets/recycleBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[2]){
+            playerProjectile.img.src = "allAssets/normal/bullets/compostBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[3])
+        {
+            playerProjectile.img.src = "allAssets/normal/bullets/landfillBullet.png";
+        }
+    }
+    else{
+        if(playerProjectile.trashType == trash[0]){
+            playerProjectile.img.src = "allAssets/colorblind/bullets/textileBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[1]){
+            playerProjectile.img.src = "allAssets/colorblind/bullets/recycleBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[2]){
+            playerProjectile.img.src = "allAssets/colorblind/bullets/compostBullet.png";
+        }
+        else if(playerProjectile.trashType == trash[3])
+        {
+            playerProjectile.img.src = "allAssets/colorblind/bullets/landfillBullet.png";
+        }
+    }
+}
+
+function colorblindImages(){
+
 }
 
 //to drop and align enemies when they hit either side of the canvas
@@ -556,6 +615,7 @@ function enemyCollisionDetection(enemies) {
                 currEnemy.alive = false;
                 weapon_shoot = false;
                 projectile.trashType = trash[currWeapon];
+                addProjectileImage(projectile);
 
                 //increase score and update scoreboard
                 score += 10;
@@ -575,13 +635,15 @@ function enemyCollisionDetection(enemies) {
                 {
                     //document.write("YOU WIN!");
                     respawnEnemies(enemies);
-                    enemyNums1 = enemyRowGen(enemiesR1);
-                    enemyNums2 = enemyRowGen(enemiesR2);
-                    enemyNums3 = enemyRowGen(enemiesR3);
                     enemyNums = [];
-                    enemyNums = enemyNums3.concat(enemyNums2);
+                    enemyNums1 = enemyRowGen(enemiesR1);
                     enemyNums = enemyNums.concat(enemyNums1);
+                    enemyNums2 = enemyRowGen(enemiesR2);
+                    enemyNums = enemyNums.concat(enemyNums2);
+                    enemyNums3 = enemyRowGen(enemiesR3);
+                    enemyNums = enemyNums.concat(enemyNums3);
                     astronautTalks(enemyNums);
+                    lowestY = enemy21.y + enemyHeight;
                     leftEnemy = enemy21;
                     rightEnemy = enemy30;
                     leftMostCol = 0;
@@ -607,6 +669,7 @@ function enemyCollisionDetection(enemies) {
             {
                 weapon_shoot = false;
                 projectile.trashType = trash[currWeapon];
+                addProjectileImage(projectile);
                 //setting projectile y to negative value to reset it
                 //may be better way to do this
                 projectile.y = -1000;
@@ -691,43 +754,6 @@ function updateWeaponBox(currWeap)
     weaponNameBox.textContent = weaponNames[currWeapon];
 }
 
-//generates the same enemy type for all enemies
-function easyEnemyTypeGen(enemyArr)
-{   //random # between 0-3 for enemy type
-    var randNum = Math.floor(Math.random() * 4);
-    var randNum2;
-
-    //if randNum = 1 then its recycling so we need a randNum2 between 0-3
-    if(randNum == 1){
-        randNum2 = Math.floor(Math.random() * 4);
-    }
-    else{ //else randNum2 between 0-2
-        randNum2 = Math.floor(Math.random() * 3);
-    }
-    for(i = 0; i < enemyArr.length; i++)
-    {
-        enemyArr[i].trashType=trash[randNum];
-        if(randNum == 0)
-        {
-            enemyArr[i].specTrashType = textileEnemies[randNum2];
-        }
-        else if(randNum == 1)
-        {
-            enemyArr[i].specTrashType = recyclingEnemies[randNum2];
-        }
-        else if(randNum == 2)
-        {
-            enemyArr[i].specTrashType = compostEnemies[randNum2];
-        }
-        else if(randNum == 3)
-        {
-            enemyArr[i].specTrashType = landfillEnemies[randNum2];
-        }
-    }
-    var randNums = [randNum, randNum2]
-    return randNums;
-}
-
 //generates a different type of enemies for each row, takes in array of a row of enemies
 function enemyRowGen(enemyRow)
 {
@@ -742,7 +768,37 @@ function enemyRowGen(enemyRow)
     else{ //else randNum2 between 0-2
         randNumo2 = Math.floor(Math.random() * 3);
     }
-    for(var i = 0; i < 10; i++)
+
+    if(enemyNums.length >= 2)
+    {
+        while(randNumo == enemyNums[0] && randNumo2 == enemyNums[1])
+        {
+            randNumo = Math.floor(Math.random() * 4);
+            //if randNum = 1 then its recycling so we need a randNum2 between 0-3
+            if(randNumo == 1){
+                randNumo2 = Math.floor(Math.random() * 4);
+            }
+            else{ //else randNum2 between 0-2
+                randNumo2 = Math.floor(Math.random() * 3);
+            }
+        }
+    }
+    if(enemyNums.length >= 4)
+    {
+        while(randNumo == enemyNums[2] && randNumo2 == enemyNums[3])
+        {
+            randNumo = Math.floor(Math.random() * 4);
+            //if randNum = 1 then its recycling so we need a randNum2 between 0-3
+            if(randNumo == 1){
+                randNumo2 = Math.floor(Math.random() * 4);
+            }
+            else{ //else randNum2 between 0-2
+                randNumo2 = Math.floor(Math.random() * 3);
+            }
+        }
+    }
+
+    for(var i = 0; i < enemyRow.length; i++)
     {
         enemyRow[i].trashType = trash[randNumo]
         if(randNumo == 0)
@@ -870,18 +926,17 @@ function astronautTalks(trashNumxs)
 /* for when the player loses the game*/
 function youLose()
 {
-    //gameRunning = false;
-    //document.write("YOU LOST!<br>Score = " + score);
-    showMenuTable();
     scores.add({
         userID: user_id,
         score: score
     });
+
+    endGame();
 }
 
 /* used to update the rightmost/leftmost enemies when they are shot 
     so that the enemy rows will know when the end enemy hits the canvas end*/
-function updateEndEnemies(enemyArr ,currEnemy)
+function updateEndEnemies(enemyArr, currEnemy)
 {
         //if we shot the leftmost or rightmost enemy, update
         if(currEnemy == leftEnemy)
@@ -926,8 +981,6 @@ function updateEndEnemies(enemyArr ,currEnemy)
                 rightMostCol--;
             }
         }
-        //console.log(leftEnemy);
-        //console.log(rightEnemy);
 }
 
 /* respawns enemies after current wave has all been killed. 
@@ -984,12 +1037,12 @@ function respawnEnemies(enemyArr)
         }
     }
 
+
 var user_id = prompt("Please enter you name");
 var player_x = canvas.width/2;
 var player_y = 475;
 var player1 = new Player(player_x, player_y, user_id);
 var projectile = new Projectile(player_x,player_y-(projectileHeight/2));
-projectile.trashType = trash[currWeapon];
 
 var enemy1 = new Enemy(42,20);
 var enemy2 = new Enemy(96,20);
@@ -1024,6 +1077,8 @@ var enemy28 = new Enemy(420,120);
 var enemy29 = new Enemy(474,120);
 var enemy30 = new Enemy(528,120);
 
+var lowestY = enemy21.y + enemyHeight;
+
 var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
 var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10];
 var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20];
@@ -1041,7 +1096,8 @@ textBox.textContent = "Click Play button to play the game! Use the up/down arrow
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
 var leftEnemy = enemy21;
 var rightEnemy = enemy30;
-//initialize scoreboard
+
+//objects for updating scoreboard, weapon and HP boxes
 var scoreboard = document.getElementById("scoreboard");
 var textileWeaponBox = document.getElementById("textileWeaponBox");
 var recyclingWeaponBox = document.getElementById("recyclingWeaponBox");
@@ -1055,38 +1111,57 @@ var HPBox = document.getElementById("hpBox");
 var interval;
 
 function setupNewGame(){
-    //makes enemy shoot every 3 seconds if the game is runng and not paused
+    //respawn all enemies to the to of the screen
     respawnEnemies(enemies);
-    enemyNums1 = enemyRowGen(enemiesR1);
-    enemyNums2 = enemyRowGen(enemiesR2);
-    enemyNums3 = enemyRowGen(enemiesR3);
+
+    //clear enemyNums array and generate different enemy types for each row
     enemyNums = [];
-    enemyNums = enemyNums3.concat(enemyNums2);
+    enemyNums1 = enemyRowGen(enemiesR1);
     enemyNums = enemyNums.concat(enemyNums1);
+    enemyNums2 = enemyRowGen(enemiesR2);
+    enemyNums = enemyNums.concat(enemyNums2);
+    enemyNums3 = enemyRowGen(enemiesR3);
+    enemyNums = enemyNums.concat(enemyNums3);
+    //update textbox to reflect new enemy types
     astronautTalks(enemyNums);
+    //add interval that makes an enemy shoot every 3 seconds
     interval = setInterval(enemyShoot, 3000);
+
+    //reset all vars and enemies speeds
     move_left = false;
     move_right = false;
     weapon_up = false;
     weapon_down = false;
     weapon_shoot = false;
     enemiesKilled = 0;
-    projectile = new Projectile(player_x,player_y-(projectileHeight/2));
     enemyFiring = false;
     for(var a = 0; a < enemies.length; a++)
     {
         enemies[a].speedy = 0.4;
         enemies[a].firing = false;
     }
+    //still reseting vars, updating weaponBox and projectile type/image
     currWeapon = 0;
     updateWeaponBox(currWeapon);
+    projectile.trashType = trash[currWeapon];
+    addProjectileImage(projectile);
+
+    //reset score, HP, left/rightmost enemies and lowestY value
     score = 0;
     HP = 3;
     scoreboard.textContent="Score: " + score;
     HPBox.textContent = "HP = " + HP;
     player1.x = canvas.width/2;
+    lowestY = enemy21.y + enemyHeight;
     leftEnemy = enemy21;
     rightEnemy = enemy30;
+
+    if(colorblind){
+        player1.img.src = "allAssets/colorblind/ship/spaceship.png";
+    }
+    else{
+        player1.img.src = "allAssets/normal/ship/spaceship.png";
+    }
 }
 
 function execution(gameRunning1) {
@@ -1102,23 +1177,12 @@ function execution(gameRunning1) {
             player1.draw();
 
             if(weapon_shoot){
-                enemyCollisionDetection(enemies);
+                if(projectile.y <= lowestY){
+                    enemyCollisionDetection(enemies);
+                }
                 projectile.update();
                 projectile.draw();
             }
-
-            /* if(enemyFiring && enemy25.firing)
-            {
-                PlayerCollisionDetection();
-                enemy25.weapon.update();
-                enemy25.weapon.draw();
-            } */
-        
-            /* for(i = 0; i < enemies.length; i++)
-            {
-                enemies[i].update();
-                enemies[i].draw();
-            } */
 
             enemy1.update();
             enemy1.draw();
@@ -1257,25 +1321,81 @@ function execution(gameRunning1) {
 
 execution(gameRunning);
 
+//shows top and bottom game tables for when game is started
+function showGameTables(){
+    document.getElementById('game_table').className = "visible";
+    document.getElementById('bottom_table').className = "visible";
+}
+
+//hides top and bottom game tables for when game ends
+function hideGameTables(){
+    document.getElementById('game_table').className = "hidden";
+    document.getElementById('bottom_table').className = "hidden";
+}
+
 //to hide Main Menu table when the play button is clicked
 function hideMenuTable(){
-    //set game to runnning and not paused
-    gameRunning = true;
-    gamePaused = false;
-    setupNewGame();
     //hide menu table
     document.getElementById('menu_table').style.visibility = "hidden";
-    //update textbox and call execution
-    execution(gameRunning);
     
 }
 
 //to show menu table, potentially called after player loses and score is displayed?
 function showMenuTable(){
+    document.getElementById('menu_table').style.visibility = "visible";
+}
+
+function playGame(){
+    //set game to runnning and not paused
+    gameRunning = true;
+    gamePaused = false;
+    hideMenuTable();
+    setupNewGame();
+    showGameTables();
+    //update textbox and call execution
+    execution(gameRunning);
+}
+
+function endGame(){
     window.cancelAnimationFrame(execution);
     gameRunning = false;
     gamePaused = true;
     textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
-    document.getElementById('menu_table').style.visibility = "visible";
+    showMenuTable();
+    hideGameTables();
     clearInterval(interval);
+}
+
+function settingsMenu(){
+    hideMenuTable();
+    showSettingTable();
+}
+
+function settingsBackMenu(){
+    hideSettingTable();
+    showMenuTable();
+}
+
+function colorBlindMode(){
+    console.log("colorblind");
+    console.log();
+    var checkBox = document.getElementById("checkBox");
+    if(checkBox.className != "trans"){
+        colorblind = false;
+        checkBox.className = "trans";
+        checkBox.src="allAssets/normal/UI/overlay_assets/transparent.png";
+    }
+    else{
+        colorblind = true;
+        checkBox.className = "chkd";
+        checkBox.src="allAssets/normal/UI/overlay_assets/colorblindcheck1.png";
+    }
+}
+
+function showSettingTable(){
+    document.getElementById("setting_table").style.visibility = "visible";
+}
+
+function hideSettingTable(){
+    document.getElementById("setting_table").style.visibility = "hidden";
 }
