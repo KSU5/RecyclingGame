@@ -209,7 +209,13 @@ td.unchosenWeapon
 {
     position: absolute;
     left: 10px;
-    bottom: 10px;
+    top: 628px;
+    width: 216px;
+    height: 72px;
+}
+
+#susLogoSet{
+    /* position: absolute; */
     width: 216px;
     height: 72px;
 }
@@ -317,6 +323,14 @@ td.unchosenWeapon
     top: 500px;
     right: 185px;
 
+  }
+
+  #susLogoSetTD{
+    position: absolute;
+    top: 628px;
+    left: 10px;
+    width: 216px;
+    height: 72px;
   }
 
   .square_button {
