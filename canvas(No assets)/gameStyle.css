@@ -325,6 +325,18 @@ td.unchosenWeapon
 
   }
 
+  #backButtonID_sc{
+    position: absolute;
+    top: 625px;
+    right: 0px;
+  }
+
+  #backButtonID_cr{
+    position: absolute;
+    top: 625px;
+    right: 0px;
+  }
+
   #susLogoSetTD{
     position: absolute;
     top: 628px;
@@ -374,10 +386,47 @@ td.unchosenWeapon
 
   #my_score{
     position: absolute;
-    top: 500px;
+    top: 515px;
     right: 210px;
     border: transparent;
     background-color: transparent;
+    color: #4CAF50;
   }
 
+  #linesTD{
+    position: absolute;
+    top: 500px;
+    right: 140px;
+
+}
+
+#linesTD_1{
+    position: absolute;
+    top: 235px;
+    right: 140px;
+
+}
+
+#linesTD_2{
+    position: absolute;
+    top: 310px;
+    right: 140px;
+
+}
+
+#linesTD_3{
+    position: absolute;
+    top: 385px;
+    right: 140px;
+
+}
   
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
