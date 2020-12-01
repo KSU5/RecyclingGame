@@ -9,6 +9,19 @@ document.addEventListener("keydown",key_down_handler,false);
 document.addEventListener("keyup",key_up_handler,false);
 document.addEventListener("keypress",key_press_handler,false);
 
+var gameMusic = new Audio("allAssets/sound effects/game sound.mp3");
+gameMusic.loop = true;
+var enemyKillSound = new Audio("allAssets/sound effects/On_enemy_kill.wav");
+var lossSound = new Audio("allAssets/sound effects/On_loss.wav");
+var wrongWeaponSound = new Audio("allAssets/sound effects/On_mismatch.wav");
+var playerHitSound = new Audio("allAssets/sound effects/On_player_hurt.wav");
+var shootSound = new Audio("allAssets/sound effects/On_shoot.wav");
+
+var FXSounds = [enemyKillSound, lossSound, wrongWeaponSound, playerHitSound, shootSound];
+
+var FXVolLvl = 50;
+var MusicVolLvl = 50;
+
 //for colorblind mode
 var colorblind = false;
 
@@ -161,14 +174,13 @@ function key_up_handler(event){
         }
         else if(event.keyCode == 66){
             //if projectile isnt on screen then we set its x coordinate to be the middle of the ship
-            if(!weapon_shoot)
-            {
-                projectile.x = player_x + (playerWidth/2) - (projectile.width/2);
-            }
 
             //if game isnt paused
-            if(!gamePaused){
-            weapon_shoot = true;}
+            if(!gamePaused && !weapon_shoot){
+                projectile.x = player_x + (playerWidth/2) - (projectile.width/2);
+                shootSound.play();
+                weapon_shoot = true;
+            }
         }
     }
 
@@ -182,11 +194,7 @@ function key_press_handler(event){
         else if(event.keyCode == 40){
         weapon_down = true;
         }
-        //Press 'shift + L' to instantly lose the game. Rip this out on final build
-        else if(event.keyCode == 76)
-        {
-            youLose();
-        }
+        
     }
 }
 
@@ -324,12 +332,7 @@ Enemy.prototype.draw = function()
     }
     else
     {
-        //if not alive, remove from screen by making coordinates large and negative
-        //may be better way to do this
-        //this.x=-1000;
-        //this.y=-1000;
-        //context.fillStyle = 'rgba(225,225,225,0.5)';
-        //context.fillRect(this.x,this.y,this.width,this.height);
+
     }
 };
 
@@ -351,10 +354,7 @@ Enemy.prototype.update = function(){
     {
         enemiesDrop("r");
     }
-    /* if (leftEnemy.x <= 0 || rightEnemy.x + this.width >= canvas.width){
-        this.direction = this.direction * -1;
-        this.y += (this.height/2);
-    } */
+    
     //if the 1st or Last enemy hits the canvas end, drop and switch directions
     if(this.y >= player_y - (playerHeight/2) && this.alive)
     {
@@ -434,10 +434,6 @@ function addProjectileImage(playerProjectile){
     }
 }
 
-function colorblindImages(){
-
-}
-
 //to drop and align enemies when they hit either side of the canvas
 function enemiesDrop(dir)
 {
@@ -457,21 +453,15 @@ function enemiesDrop(dir)
                 enemiesR1[i].y += (enemyHeight/2);
             }
             else if(i > leftMostCol){
-                //if(enemiesR3[i].alive){
                     enemiesR3[i].x = enemiesR3[i-1].x+54;
                     enemiesR3[i].y += (enemyHeight/2);
                     enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                //}
-                //if(enemiesR2[i].alive){
                     enemiesR2[i].x = enemiesR2[i-1].x+54;
                     enemiesR2[i].y += (enemyHeight/2);
                     enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                //}
-                //if(enemiesR1[i].alive){
                     enemiesR1[i].x = enemiesR1[i-1].x+54;
                     enemiesR1[i].y += (enemyHeight/2);
                     enemiesR1[i].direction = enemiesR1[i].direction * -1;
-                //}
             }
         }
     }
@@ -491,21 +481,15 @@ function enemiesDrop(dir)
                 enemiesR1[i].y += (enemyHeight/2);
             }
             else if(i < rightMostCol){
-                //if(enemiesR3[i].alive){
                     enemiesR3[i].x = enemiesR3[i+1].x-54;
                     enemiesR3[i].y += (enemyHeight/2);
                     enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                //}
-                //if(enemiesR2[i].alive){
                     enemiesR2[i].x = enemiesR2[i+1].x-54;
                     enemiesR2[i].y += (enemyHeight/2);
                     enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                //}
-                //if(enemiesR1[i].alive){
                     enemiesR1[i].x = enemiesR1[i+1].x-54;
                     enemiesR1[i].y += (enemyHeight/2);
                     enemiesR1[i].direction = enemiesR1[i].direction * -1;
-                //}
             }
         }
     }
@@ -515,12 +499,10 @@ function enemiesDrop(dir)
 function PlayerCollisionDetection(enemyShooting) {
     if(enemyShooting.weapon.y >= player1.y - (playerHeight/2)){
         if((enemyShooting.weapon.x+projectileWidth) >= player1.x && enemyShooting.weapon.x <= (player1.x+playerWidth)) {
-            //console.log(player1.y);
-            //console.log(enemyShooting.weapon.y);
+            playerHitSound.play();
 
             enemyFiring = false;
             enemyShooting.firing = false;
-            //enemyShooting.weapon.y = enemy25.y + (enemyHeight/2);
             HP--;
             if(HP <= 0){youLose();}
             else{
@@ -535,7 +517,7 @@ function PlayerCollisionDetection(enemyShooting) {
 //function to make an enemy shoot
 function enemyShoot()
 {
-    if(!enemyFiring){   
+    if(!enemyFiring && !gamePaused){   
         //random # between 0-9 for enemy to fire
         var rando = Math.floor(Math.random() * 10);
         while(!enemiesR3[rando].alive && !enemiesR2[rando].alive && !enemiesR1[rando].alive){
@@ -559,6 +541,7 @@ function enemyShoot()
             enemiesR1[rando].weapon.x = enemiesR1[rando].x + (enemyWidth/2) - (projectileWidth/2);
             enemiesR1[rando].weapon.y = enemiesR1[rando].y + (enemyHeight/2);
         }
+        shootSound.play();
     }
 }
 
@@ -573,6 +556,7 @@ function enemyCollisionDetection(enemies) {
             //if correct weapon for enemy type and enemy is alive
             if(projectile.trashType == currEnemy.trashType && currEnemy.alive)
             {
+                enemyKillSound.play();
                 //set enemy to not alive, weapon_shoot to false, and projectile type to currWeapon
                 currEnemy.alive = false;
                 weapon_shoot = false;
@@ -629,6 +613,7 @@ function enemyCollisionDetection(enemies) {
             }
             else if(projectile.trashType != currEnemy.trashType && currEnemy.alive)
             {
+                wrongWeaponSound.play();
                 weapon_shoot = false;
                 projectile.trashType = trash[currWeapon];
                 addProjectileImage(projectile);
@@ -668,17 +653,17 @@ function itsAHit(proj, currEnemy)
 function wrongHitMsg(hitEnemy)
 {
     if(hitEnemy.trashType == trash[0]){ //if textile
-       var textileString = "Looks like you're using the wrong weapon! Only 15% of used clothing in the USA is recycled, leaving landfills full of clothes that could've been recycled!";
+       var textileString = "You're using the wrong weapon! Only 15% of used clothing in the USA is recycled, leaving landfills full of clothes that could've been recycled! Use the up/down keys to switch to the correct weapon.";
        textBox.textContent = textileString;
     }
     else if(hitEnemy.trashType == trash[1]){ //else if recyclable
-        textBox.textContent = "Looks like you're using the wrong weapon! Improperly recycling prevents resources from being reused which hurts the enviroment!";
+        textBox.textContent = "You're using the wrong weapon! Improperly recycling prevents resources from being reused which hurts the enviroment! Use the up/down keys to switch to the correct weapon.";
     }
     else if(hitEnemy.trashType == trash[2]){ //else if compose
-        textBox.textContent = "Looks like you're using the wrong weapon! Not composting leads to increased waste in landfills!";
+        textBox.textContent = "You're using the wrong weapon! Not composting leads to increased waste in landfills! Use the up/down keys to switch to the correct weapon.";
     }
     else if(hitEnemy.trashType == trash[3]){ //else if landfill
-        textBox.textContent = "Looks like you're using the wrong weapon! Trash can contaminate other items being recycled or composted which compromises our sustainability mission!";
+        textBox.textContent = "You're using the wrong weapon! Trash can contaminate other items being recycled or composted which compromises our sustainability mission! Use the up/down keys to switch to the correct weapon.";
     }
 }
 
@@ -884,7 +869,7 @@ function astronautTalks(trashNumxs)
             }
         }
     }
-    fullString = fullString.concat("! Use the correct weapons to send them to ");
+    fullString = fullString.concat("! Use press 'b' to fire and send them to ");
     
     if(endPlacesArr.length == 1)
     {
@@ -906,6 +891,9 @@ function astronautTalks(trashNumxs)
 /* for when the player loses the game*/
 function youLose()
 {
+    gameMusic.pause();
+    gameMusic.currentTime = 0;
+    lossSound.play();
     scores.add({
         userID: user_id,
         score: score
@@ -1017,8 +1005,18 @@ function respawnEnemies(enemyArr)
         }
     }
 
+var user_id;
 
-var user_id = prompt("Please enter you name");
+function getPittID(){
+    user_id = prompt("Please enter your PittID");
+    while(user_id == null || user_id == ""){
+        user_id = prompt("Please enter your PittID");
+    }
+}
+
+getPittID();
+
+
 var player_x = canvas.width/2;
 var player_y = 475;
 var player1 = new Player(player_x, player_y, user_id);
@@ -1065,12 +1063,11 @@ var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, 
 var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
 /* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
     element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
-var enemyNums; //= easyEnemyTypeGen(enemies);
+var enemyNums;
 var enemyNums1;
 var enemyNums2;
 var enemyNums3;
 var textBox = document.getElementById("textBox");
-//astronautTalks(enemyNums);
 textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
 
 //used to track the leftmost and rightmost enemies for when they hit the canvas ends
@@ -1091,6 +1088,53 @@ var HPBox = document.getElementById("hpBox");
 var interval;
 
 function setupNewGame(){
+setFXVol(FXSounds);
+gameMusic.volume = MusicVolLvl / 100;
+gameMusic.play();
+player_x = canvas.width/2;
+player_y = 475;
+player1 = new Player(player_x, player_y, user_id);
+projectile = new Projectile(player_x,player_y-(projectileHeight/2));
+
+enemy1 = new Enemy(42,20);
+enemy2 = new Enemy(96,20);
+enemy3 = new Enemy(150,20);
+enemy4 = new Enemy(204,20);
+enemy5 = new Enemy(258,20);
+enemy6 = new Enemy(312,20);
+enemy7 = new Enemy(366,20);
+enemy8 = new Enemy(420,20);
+enemy9 = new Enemy(474,20);
+enemy10 = new Enemy(528,20);
+
+enemy11 = new Enemy(42,70);
+enemy12 = new Enemy(96,70);
+enemy13 = new Enemy(150,70);
+enemy14 = new Enemy(204,70);
+enemy15 = new Enemy(258,70);
+enemy16 = new Enemy(312,70);
+enemy17 = new Enemy(366,70);
+enemy18 = new Enemy(420,70);
+enemy19 = new Enemy(474,70);
+enemy20 = new Enemy(528,70);
+
+enemy21 = new Enemy(42,120);
+enemy22 = new Enemy(96,120);
+enemy23 = new Enemy(150,120);
+enemy24 = new Enemy(204,120);
+enemy25 = new Enemy(258,120);
+enemy26 = new Enemy(312,120);
+enemy27 = new Enemy(366,120);
+enemy28 = new Enemy(420,120);
+enemy29 = new Enemy(474,120);
+enemy30 = new Enemy(528,120);
+
+lowestY = enemy21.y + enemyHeight;
+
+enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
+enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10];
+enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20];
+enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
     //respawn all enemies to the to of the screen
     respawnEnemies(enemies);
 
@@ -1295,8 +1339,7 @@ function execution(gameRunning1) {
 
         window.requestAnimationFrame(execution);
     }
-    else{window.cancelAnimationFrame(execution);}
-
+    else{window.cancelAnimationFrame(execution); return;}
 }
 
 execution(gameRunning);
@@ -1337,9 +1380,10 @@ function playGame(){
 }
 
 function endGame(){
-    window.cancelAnimationFrame(execution);
     gameRunning = false;
     gamePaused = true;
+    execution(gameRunning)
+    window.cancelAnimationFrame(execution);
     textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
     showMenuTable();
     hideGameTables();
@@ -1349,6 +1393,28 @@ function endGame(){
 function settingsMenu(){
     hideMenuTable();
     showSettingTable();
+    var FXSlider = document.getElementById("FXVol");
+
+// Update the current slider value (each time you drag the slider handle)
+FXSlider.oninput = function() {
+    FXVolLvl = this.value;
+}
+
+var MusicSlider = document.getElementById("MusicVol");
+
+// Update the current slider value (each time you drag the slider handle)
+MusicSlider.oninput = function() {
+    MusicVolLvl = this.value;
+}
+
+}
+
+function setFXVol(FXArr){
+    for(var tt = 0; tt < FXArr.length; tt++){
+        var vol = FXVolLvl / 100;
+        if(vol < 0.03){FXArr[tt].volume = 0.0;}
+        else{FXArr[tt].volume = vol;}
+    }
 }
 
 function settingsBackMenu(){
@@ -1357,8 +1423,6 @@ function settingsBackMenu(){
 }
 
 function colorBlindMode(){
-    console.log("colorblind");
-    console.log();
     var checkBox = document.getElementById("checkBox");
     if(checkBox.className != "trans"){
         colorblind = false;
