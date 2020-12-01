@@ -66,9 +66,76 @@ var rightMostCol = 9;
 
 var score = 0;
 
-//Database Initilization
-const database = firebase.firestore();
-const scores = database.collection('scores');
+//**************************Database Functions**************************
+var database = firebase.firestore();
+var scores = database.collection('scores').doc("allScores");
+
+var topScores = [];
+var topNames = [];
+
+var allScores = null;
+var names = null;
+
+var numberOfTopScoresToGet = 3;
+var scoresReady = false;
+//
+function GetScores()
+{
+    scoresReady = false;
+    scores.get().then(function(doc) {
+        if (doc.exists) {
+            allScores = doc.data().score;
+            names = doc.data().name;
+            PopulateTopScores(numberOfTopScoresToGet);
+        }
+    }).catch(function(error) {
+        console.log("Error getting scores:", error);
+    });
+}
+GetScores();
+
+//Populates the topNames and topScores array
+function PopulateTopScores(n)
+{
+    topScores = [];
+    topNames = [];
+
+    //For every score in the scores array
+    for(var i = 0; i < allScores.length; i++)
+    {
+        //If the return array is less than the scores array
+        if(topScores.length < n)
+        {
+            topScores.push(allScores[i]);
+            topNames.push(names[i]);
+        }
+        else
+        {
+            //Find the minimum value in the current list of top scores
+            var minIndex = -1;
+            var minValue = Number.MAX_SAFE_INTEGER;
+            for(var j = 0; j < topScores.length; j++)
+            {
+                if(topScores[j] < minValue)
+                {
+                    minIndex = j;
+                    minValue = topScores[j];
+                }
+            }
+
+            //If the current score is greater than this minimum, replace it
+            if(allScores[i] > minValue)
+            {
+                topScores[minIndex] = allScores[i];
+                topNames[minIndex] = names[i];
+            }
+        }
+    } 
+    console.log(topScores);
+    console.log(topNames);
+    scoresReady = true;
+}
+//**************************End Database Functions**************************
 
 function key_down_handler(event){
     if(gameRunning){
@@ -161,6 +228,9 @@ function key_up_handler(event){
         }
         else if(event.keyCode == 81)
         {
+            //For testing. Rip out if I forget to
+            //youLose();
+
             if(!gamePaused)
             {
                 textBox.textContent = "Press the q key to resume the game!";
@@ -894,10 +964,15 @@ function youLose()
     gameMusic.pause();
     gameMusic.currentTime = 0;
     lossSound.play();
-    scores.add({
-        userID: user_id,
-        score: score
-    });
+
+    allScores.push(score);
+    names.push(user_id);
+    scores.update({
+        name: names,
+        score: allScores
+    })
+
+    GetScores();
 
     endGame();
 }
