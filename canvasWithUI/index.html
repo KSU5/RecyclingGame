@@ -50,10 +50,10 @@
             <td id="settingsButtonTD" height = "82"><img src="allAssets/normal/UI/buttons/settingsbutton.png" class="buttonz" id="settingButton" onclick="settingsMenu()"></td>
         </tr>
         <tr>
-            <td id="highscoreButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/highscoresbutton.png" class="buttonz" id="highscoreButton"></td>
+            <td id="highscoreButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/highscoresbutton.png" class="buttonz" id="highscoreButton" onclick="scoreboardMenu()"></td>
         </tr>
         <tr>
-            <td id="creditsButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/creditsbutton.png" class="buttonz" id="credits bottom"></td>
+            <td id="creditsButtonTD" height = "97"><img src="allAssets/normal/UI/buttons/creditsbutton.png" class="buttonz" id="creditsButton" onclick="creditsMenu()"></td>
         </tr>
         <tr>
             <td id = "logoAreaBottom" height="118"><img id="sustainLogo" src="allAssets/normal/UI/PittSustainability_stacked_green.png"></td>
@@ -78,6 +78,57 @@
             <td id="susLogoSetTD"><img id ="susLogoSet" src="allAssets/normal/UI/PittSustainability_stacked_green.png"></td>
         </tr>
     </table>
+
+<!-- ---------------------------------------------------------------------------------- -->
+    
+    <table id = "scoreboard_table" height = "700" width= "600" background = "allAssets/normal/UI/menus/mainmenu1.png">
+   
+        <tr>
+            <td id = "scoreboardPannelTD"><img src="allAssets/normal/UI/menus/Learderboards Menu.png"></td>
+           
+        </tr>
+
+        <tr>
+            <td id="playerHighscore" class="scorePanel" width="300" height="50"></td>
+            <td id="highscore1" class="scorePanel" width="300" height="50"></td>
+            <td id="highscore2" class="scorePanel" width="300" height="50"></td>
+            <td id="highscore3" class="scorePanel" width="300" height="50"></td>
+        </tr>
+
+        <tr>
+            <td><input  type="text" id ="score_1" name ="score_1"  disabled="disabled"></td>
+            <td><input  type="text" id ="score_2" name ="score_2"  disabled="disabled">  </td>
+            <td><input  type="text" id ="score_3" name ="score_3"  disabled="disabled"> </td>
+            <td><input  type="text" id ="my_score" name ="my_score"  disabled="disabled"> </td>
+
+        </tr>
+
+        <tr>
+            <td id="susLogoLBTD"><img id ="susLogoLB" src="allAssets/normal/UI/PittSustainability_stacked_green.png"></td>
+            <td id = "backButtonID_sc"><img src = "allAssets/normal/UI/buttons/backbutton.png" id = "backButton" onclick="scoreboardBackMenu()"></td>
+        </tr>
+    
+    </table>
+
+    <table id = "credits_table" height = "700" width= "600" background = "allAssets/normal/UI/menus/mainmenu1.png">
+    
+        <tr>
+            <td id = "creditsTableID"><img src="allAssets/normal/UI/menus/credits menu.png"></td>
+            <td id = "creditsTableID_song"><img src="allAssets/normal/UI/menus/song credits1.png"></td>
+
+        </tr>
+
+        <tr>
+            <td id = "backButtonID_cr"><img src = "allAssets/normal/UI/buttons/backbutton.png" id = "backButton" onclick="creditsBackMenu()"></td>
+            <td id="susLogoCredTD"><img id ="susLogoCred" src="allAssets/normal/UI/PittSustainability_stacked_green.png"></td>
+
+        </tr>
+    
+    
+    
+    </table>
+
+    <!-- ------------------------------------------------------------------------- -->
 
     <table id = "game_table" class="hidden" height="574" width="600" background="allAssets/normal/UI/UPDATED_UI_TOP.png">
         <tr>

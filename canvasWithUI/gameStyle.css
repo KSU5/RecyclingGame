@@ -325,6 +325,18 @@ td.unchosenWeapon
 
   }
 
+  #backButtonID_sc{
+    position: absolute;
+    top: 625px;
+    left: 183px;
+  }
+
+  #backButtonID_cr{
+    position: absolute;
+    top: 586px;
+    left: 183px;
+  }
+
   #susLogoSetTD{
     position: absolute;
     top: 628px;
@@ -343,3 +355,128 @@ td.unchosenWeapon
     top: 437px;
     right: 169px;
   }
+
+  #score_1{
+    position: absolute;
+    top: 250px;
+    right: 210px;
+    border: transparent;
+    background-color: transparent;
+  }
+
+  
+  #score_2{
+    position: absolute;
+    top: 325px;
+    right: 210px;
+    border: transparent;
+    background-color: transparent;
+  }
+
+  
+  #score_3{
+    position: absolute;
+    top: 400px;
+    right: 210px;
+    border: transparent;
+    background-color: transparent;
+  }
+
+
+  #my_score{
+    position: absolute;
+    top: 515px;
+    right: 210px;
+    border: transparent;
+    background-color: transparent;
+    color: #4CAF50;
+  }
+
+  #playerHighscore{
+    position: absolute;
+    top: 500px;
+    right: 140px;
+}
+
+#highscore1{
+    position: absolute;
+    top: 235px;
+    right: 140px;
+}
+
+#highscore2{
+    position: absolute;
+    top: 310px;
+    right: 140px;
+}
+
+#highscore3{
+    position: absolute;
+    top: 385px;
+    right: 140px;
+
+}
+
+#creditsTableID{
+    position: absolute;
+    top:20px;
+}
+
+
+#creditsTableID_song{
+    position: absolute;
+    top: 136px;
+    left: 145px;
+}
+
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+.scorePanel img{
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.scorePanel {
+    background:url("allAssets/normal/UI/overlay_assets/scoreboardpanel.png") no-repeat top left;
+    padding-top: 10px;
+    text-align: center;
+    max-height: 50px;
+    max-width: 300px;
+    color: white;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    font-smooth: never;
+    -webkit-font-smoothing : none;
+    /* text-shadow: 2px 2px 5px blue; */
+    font-size: 20px;
+
+}
+
+#susLogoCred
+{
+    position: absolute;
+    left: 10px;
+    top: 628px;
+    width: 216px;
+    height: 72px;
+}
+
+#susLogoLB
+{
+    position: absolute;
+    left: 10px;
+    top: 628px;
+    width: 216px;
+    height: 72px;
+}
