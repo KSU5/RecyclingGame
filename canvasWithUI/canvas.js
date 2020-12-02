@@ -262,11 +262,6 @@ function key_press_handler(event){
         else if(event.keyCode == 40){
         weapon_down = true;
         }
-        //Press 'shift + L' to instantly lose the game. Rip this out on final build
-        else if(event.keyCode == 76)
-        {
-            youLose();
-        }
     }
 }
 
@@ -589,7 +584,7 @@ function PlayerCollisionDetection(enemyShooting) {
             if(HP <= 0){youLose();}
             else{
                 HPBox.textContent = "HP = " + HP;
-                textBox.textContent = "We've been hit!";
+                textBox.textContent = "We've been hit! Press 'q' to pause the game, press 'b' to fire your weapon and use the up/down arrows to change weapons!";
             }
         }
     }
@@ -1142,12 +1137,7 @@ function getPittID(){
     while(user_id == null){
         user_id = prompt("Please enter a valid PittID");
     }
-    var match = user_id.match(/^[a-zA-Z]{3}\d{1,3}$/);
-    //console.log(match[0]);
-    while(match == null){
-    user_id = prompt("Please enter a valid PittID");
-    match = user_id.match(/[a-zA-Z]{3}\d{1,3}/);
-    }
+    
     user_id = user_id.toUpperCase();
 }
 

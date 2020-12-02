@@ -449,7 +449,7 @@ td.unchosenWeapon
 }
 
 .scorePanel {
-    background:url("allAssets/normal/UI/overlay_assets/scoreboardpanel.png") no-repeat top left;
+    background:url("all assets/normal/UI/overlay_assets/scoreboardpanel.png") no-repeat top left;
     padding-top: 10px;
     text-align: center;
     max-height: 50px;
