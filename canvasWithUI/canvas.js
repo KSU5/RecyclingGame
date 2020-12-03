@@ -340,6 +340,7 @@ function key_press_handler(event){
         weapon_down = true;
         }
         
+        
     }
 }
 
@@ -1554,16 +1555,21 @@ function execution(gameRunning1) {
         context.font = "30px Comic Sans MS";
         context.textAlign = "center";
         context.fillText("SCORE: " + score, canvas.width/2, canvas.height/2);
-        canvas.addEventListener('click', function(event){
-            hideGameTables();
-            showMenuTable();
-        }, false);
+        canvas.addEventListener('click', backToMenu, false);
         window.cancelAnimationFrame(execution);
     }
     else{window.cancelAnimationFrame(execution); return;}
 }
 
 execution(gameRunning);
+
+function backToMenu(){
+    canvas = document.getElementById("game_layer");
+    canvas.removeEventListener('click', backToMenu);
+    window.cancelAnimationFrame(execution);
+    hideGameTables();
+    showMenuTable();
+}
 
 //shows top and bottom game tables for when game is started
 function showGameTables(){
