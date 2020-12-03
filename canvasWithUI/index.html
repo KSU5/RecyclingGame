@@ -37,7 +37,19 @@
 </head>
 <body>
 <div id = "UIArea" height ="700" width = "600">
-    <table id ="menu_table" height = "700" width = "600" background = "all assets/normal/UI/menus/mainmenu1.png">
+    <table id = "IDPrompt" height = "700" width= "600" background = "all assets/normal/UI/menus/IDPromptBG.png">
+        <tr>
+            <td id="badNameTD"><img id ="badName" src="all assets/normal/UI//menus/name error1.png"></td>
+            <td id="IDBoxTD"> <input type="text" id="IDBox" name="IDBox"></td>
+        </tr>
+        <tr>
+            <td id="submitB"><img src="all assets/normal/UI/buttons/submit button.png" id="submitButton" onclick="getPittID1()"></td>
+        
+            <td id="susLogoIDTD"><img id ="susLogoID" src="all assets/normal/UI/PittSustainability_stacked_green.png"></td>
+        </tr>
+    </table>
+
+    <table id ="menu_table" class="hidden" height = "700" width = "600" background = "all assets/normal/UI/menus/mainmenu1.png">
         <tr>
             <td id = "logoArea" height="209"></td>
             

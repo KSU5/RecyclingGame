@@ -18,6 +18,78 @@ var wrongWeaponSound = new Audio("all assets/sound effects/On_mismatch.wav");
 var playerHitSound = new Audio("all assets/sound effects/On_player_hurt.wav");
 var shootSound = new Audio("all assets/sound effects/On_shoot.wav");
 
+//enemy images
+var socksPic = new Image();
+socksPic.src = "all assets/normal/enemies/textenemy2.png";
+var jeansPic = new Image();
+jeansPic.src = "all assets/normal/enemies/textenemy1.png";
+var shirtPic = new Image();
+shirtPic.src = "all assets/normal/enemies/textenemy3.png";
+var canPic = new Image();
+canPic.src = "all assets/normal/enemies/recycenemy1.png";
+var paperPic = new Image();
+paperPic.src = "all assets/normal/enemies/recycenemy2.png";
+var bottlePic = new Image();
+bottlePic.src = "all assets/normal/enemies/recycenemy3.png";
+var batteryPic = new Image();
+batteryPic.src = "all assets/normal/enemies/recycenemy4.png";
+var pizzaPic = new Image();
+pizzaPic.src = "all assets/normal/enemies/compenemy1.png";
+var applePic = new Image();
+applePic.src = "all assets/normal/enemies/compenemy2.png";
+var broccoliPic = new Image();
+broccoliPic.src = "all assets/normal/enemies/compenemy3.png";
+var strawsPic = new Image();
+strawsPic.src = "all assets/normal/enemies/landfillenemy1.png";
+var bagsPic = new Image();
+bagsPic.src = "all assets/normal/enemies/landfillenemy2.png";
+var cupsPic = new Image();
+cupsPic.src = "all assets/normal/enemies/landfillenemy3.png";
+
+
+var socksPicCB = new Image();
+socksPicCB.src = "all assets/colorblind/enemies/textenemy2.png";
+var jeansPicCB = new Image();
+jeansPicCB.src = "all assets/colorblind/enemies/textenemy1.png";
+var shirtPicCB = new Image();
+shirtPicCB.src = "all assets/colorblind/enemies/textenemy3.png";
+var canPicCB = new Image();
+canPicCB.src = "all assets/colorblind/enemies/recycenemy1.png";
+var paperPicCB = new Image();
+paperPicCB.src = "all assets/colorblind/enemies/recycenemy2.png";
+var bottlePicCB = new Image();
+bottlePicCB.src = "all assets/colorblind/enemies/recycenemy3.png";
+var batteryPicCB = new Image();
+batteryPicCB.src = "all assets/colorblind/enemies/recycenemy4.png";
+var pizzaPicCB = new Image();
+pizzaPicCB.src = "all assets/colorblind/enemies/compenemy1.png";
+var applePicCB = new Image();
+applePicCB.src = "all assets/colorblind/enemies/compenemy2.png";
+var broccoliPicCB = new Image();
+broccoliPicCB.src = "all assets/colorblind/enemies/compenemy3.png";
+var strawsPicCB = new Image();
+strawsPicCB.src = "all assets/colorblind/enemies/landfillenemy1.png";
+var bagsPicCB = new Image();
+bagsPicCB.src = "all assets/colorblind/enemies/landfillenemy2.png";
+var cupsPicCB = new Image();
+cupsPicCB.src = "all assets/colorblind/enemies/landfillenemy3.png";
+
+var textileEnemiesPics = [socksPic, jeansPic, shirtPic];
+var recyclingEnemiesPics = [canPic, paperPic, bottlePic, batteryPic];
+var compostEnemiesPics = [pizzaPic, applePic, broccoliPic];
+var landfillEnemiesPics = [strawsPic, bagsPic, cupsPic];
+
+var textileEnemiesPicsCB = [socksPicCB, jeansPicCB, shirtPicCB];
+var recyclingEnemiesPicsCB = [canPicCB, paperPicCB, bottlePicCB, batteryPicCB];
+var compostEnemiesPicsCB = [pizzaPicCB, applePicCB, broccoliPicCB];
+var landfillEnemiesPicsCB  = [strawsPicCB, bagsPicCB, cupsPicCB];
+
+var gameOverImg = new Image();
+gameOverImg.src="all assets/normal/UI/menus/game over panel1.png";
+
+var backBtn = new Image();
+backBtn.src = "all assets/normal/UI/buttons/backbutton.png";
+
 var FXSounds = [enemyKillSound, lossSound, wrongWeaponSound, playerHitSound, shootSound];
 
 var FXVolLvl = 50;
@@ -28,6 +100,8 @@ var colorblind = false;
 
 var canvas = document.getElementById("game_layer");
 var context = canvas.getContext("2d");
+
+var gameOverScreen = false;
 
 var enemyFiring = false;
 
@@ -132,8 +206,8 @@ function PopulateTopScores(n)
             }
         }
     } 
-    console.log(topScores);
-    console.log(topNames);
+    //console.log(topScores);
+    //console.log(topNames);
     scoresReady = true;
 }
 //**************************End Database Functions**************************
@@ -250,6 +324,9 @@ function key_up_handler(event){
                 weapon_shoot = true;
             }
         }
+        else if(event.keyCode == 17){
+            event.preventDefault();
+        }
     }
 
 }
@@ -262,6 +339,7 @@ function key_press_handler(event){
         else if(event.keyCode == 40){
         weapon_down = true;
         }
+        
     }
 }
 
@@ -314,7 +392,7 @@ function Player(x, y, user_id){
     this.y = y;
     this.width = playerWidth;
     this.height = playerHeight;
-    this.speedx = 1.4;
+    this.speedx = 2.0;
     this.hp = 3;
     this.img = new Image();
     if(colorblind){
@@ -365,7 +443,7 @@ function Enemy(x, y){
     this.width = 30;
     this.height = 30;
     this.direction = -1;
-    this.speedy = 0.4;
+    this.speedy = 0.2;
     this.alive = true;
     this.firing = false;
     this.trashType;
@@ -434,36 +512,36 @@ Enemy.prototype.update = function(){
 function addEnemyImage(currEn)
 {
     if(!colorblind){
-        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="all assets/normal/enemies/textenemy2.png";}
-        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="all assets/normal/enemies/textenemy1.png";}
-        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="all assets/normal/enemies/textenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="all assets/normal/enemies/recycenemy1.png";}
-        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="all assets/normal/enemies/recycenemy2.png";}
-        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="all assets/normal/enemies/recycenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="all assets/normal/enemies/recycenemy4.png";}
-        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="all assets/normal/enemies/compenemy1.png";}
-        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="all assets/normal/enemies/compenemy2.png";}
-        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="all assets/normal/enemies/compenemy3.png";}
-        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="all assets/normal/enemies/landfillenemy1.png";}
-        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="all assets/normal/enemies/landfillenemy2.png";}
-        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="all assets/normal/enemies/landfillenemy3.png";}
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img=textileEnemiesPics[0];}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img=textileEnemiesPics[1];}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img=textileEnemiesPics[2];}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img=recyclingEnemiesPics[0];}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img=recyclingEnemiesPics[1];}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img=recyclingEnemiesPics[2];}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img=recyclingEnemiesPics[3];}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img=compostEnemiesPics[0];}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img=compostEnemiesPics[1];}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img=compostEnemiesPics[2];}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img=landfillEnemiesPics[0];}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img=landfillEnemiesPics[1];}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img=landfillEnemiesPics[2];}
         currEn.weapon.img.src = "all assets/normal/bullets/enemyprojectile1.png";
     }
     else{
-        if(currEn.specTrashType == textileEnemies[0]){currEn.img.src="all assets/colorblind/enemies/textenemy2.png";}
-        else if(currEn.specTrashType == textileEnemies[1]){currEn.img.src="all assets/colorblind/enemies/textenemy1.png";}
-        else if(currEn.specTrashType == textileEnemies[2]){currEn.img.src="all assets/colorblind/enemies/textenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img.src="all assets/colorblind/enemies/recycenemy1.png";}
-        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img.src="all assets/colorblind/enemies/recycenemy2.png";}
-        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img.src="all assets/colorblind/enemies/recycenemy3.png";}
-        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img.src="all assets/colorblind/enemies/recycenemy4.png";}
-        else if(currEn.specTrashType == compostEnemies[0]){currEn.img.src="all assets/colorblind/enemies/compenemy1.png";}
-        else if(currEn.specTrashType == compostEnemies[1]){currEn.img.src="all assets/colorblind/enemies/compenemy2.png";}
-        else if(currEn.specTrashType == compostEnemies[2]){currEn.img.src="all assets/colorblind/enemies/compenemy3.png";}
-        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img.src="all assets/colorblind/enemies/landfillenemy1.png";}
-        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img.src="all assets/colorblind/enemies/landfillenemy2.png";}
-        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img.src="all assets/colorblind/enemies/landfillenemy3.png";}
-        currEn.weapon.img.src = "all assets/colorblind/bullets/enemyprojectile1.png"
+        if(currEn.specTrashType == textileEnemies[0]){currEn.img=textileEnemiesPicsCB[0];}
+        else if(currEn.specTrashType == textileEnemies[1]){currEn.img=textileEnemiesPicsCB[1];}
+        else if(currEn.specTrashType == textileEnemies[2]){currEn.img=textileEnemiesPicsCB[2];}
+        else if(currEn.specTrashType == recyclingEnemies[0]){currEn.img=recyclingEnemiesPicsCB[0];}
+        else if(currEn.specTrashType == recyclingEnemies[1]){currEn.img=recyclingEnemiesPicsCB[1];}
+        else if(currEn.specTrashType == recyclingEnemies[2]){currEn.img=recyclingEnemiesPicsCB[2];}
+        else if(currEn.specTrashType == recyclingEnemies[3]){currEn.img=recyclingEnemiesPicsCB[3];}
+        else if(currEn.specTrashType == compostEnemies[0]){currEn.img=compostEnemiesPicsCB[0];}
+        else if(currEn.specTrashType == compostEnemies[1]){currEn.img=compostEnemiesPicsCB[1];}
+        else if(currEn.specTrashType == compostEnemies[2]){currEn.img=compostEnemiesPicsCB[2];}
+        else if(currEn.specTrashType == landfillEnemies[0]){currEn.img=landfillEnemiesPicsCB[0];}
+        else if(currEn.specTrashType == landfillEnemies[1]){currEn.img=landfillEnemiesPicsCB[1];}
+        else if(currEn.specTrashType == landfillEnemies[2]){currEn.img=landfillEnemiesPicsCB[2];}
+        currEn.weapon.img.src = "all assets/colorblind/bullets/enemyprojectile1.png";
     }
 }
 
@@ -569,7 +647,7 @@ function enemiesDrop(dir)
             }
         }
     }
-    console.log("ENEMY1.Y = " + enemy1.y);
+    //console.log(enemy1.y);
 }
 
 //function to detect whether player was hit by an enemy projectile, and make adjustments to game accodingly
@@ -657,7 +735,7 @@ function enemyCollisionDetection(enemies) {
                 if(enemiesKilled >= enemies.length)
                 {
                     //document.write("YOU WIN!");
-                    respawnEnemies(enemies);
+                    respawnEnemies(enemies, true);
                     enemyNums = [];
                     enemyNums1 = enemyRowGen(enemiesR1);
                     enemyNums = enemyNums.concat(enemyNums1);
@@ -971,14 +1049,14 @@ function youLose()
     gameMusic.pause();
     gameMusic.currentTime = 0;
     lossSound.play();
-
-allScores.push(score);
-    names.push(user_id);
-    scores.update({
-        name: names,
-        score: allScores
-    })
-
+if(user_id != ""){
+    allScores.push(score);
+        names.push(user_id);
+        scores.update({
+            name: names,
+            score: allScores
+        })
+}
     GetScores();
 
     endGame();
@@ -1078,7 +1156,7 @@ function createPlayer(){
 
 /* respawns enemies after current wave has all been killed. 
     basically it just resets their coordinates and alive boolean */
-function respawnEnemies(enemyArr)
+function respawnEnemies(enemyArr, pFlag)
 {
     for(i = 0; i < enemies.length; i++)
     {
@@ -1098,6 +1176,9 @@ function respawnEnemies(enemyArr)
         var iMod = i % 10;
         enemyArr[i].x = 42 + (54*iMod);  
         enemyArr[i].direction = -1; 
+        if(pFlag && score < 400){
+            enemyArr[i].speedy = (enemyArr[i].speedy+0.1);
+        }
     }
 }
 
@@ -1125,7 +1206,7 @@ function respawnEnemies(enemyArr)
                 var iMod = i % 10;
                 enemyArr[i].x = 42 + (54*iMod);
                 enemyArr[i].direction = -1;
-                enemyArr[i].speedy = (enemyArr[i].speedy*2);
+                enemyArr[i].speedy = (enemyArr[i].speedy+0.1);
             }
         }
     }
@@ -1137,11 +1218,41 @@ function getPittID(){
     while(user_id == null){
         user_id = prompt("Please enter a valid PittID");
     }
-    
+    var match = user_id.match(/^[a-zA-Z]{3}\d{1,3}$/);
+    //console.log(match[0]);
+    while(match == null){
+    user_id = prompt("Please enter a valid PittID");
+    match = user_id.match(/[a-zA-Z]{3}\d{1,3}/);
+    }
     user_id = user_id.toUpperCase();
 }
 
-getPittID();
+function getPittID1(){
+    user_id = document.getElementById("IDBox").value;
+    //console.log("Hi");
+    //console.log(user_id);
+    if(user_id == null){
+        document.getElementById("badNameTD").style.visibility = "visible";
+    }
+    else{
+        if(user_id == ""){
+            hideIDPrompt();
+            showMenuTable();
+        }
+        else{
+            var match = user_id.match(/^[a-zA-Z]{3}\d{1,3}$/);
+            //console.log(match[0]);
+            if(match == null){
+                document.getElementById("badNameTD").style.visibility = "visible";
+            }
+            else{
+                user_id = user_id.toUpperCase();
+                hideIDPrompt();
+                showMenuTable();
+            }
+        }
+    }
+}
 
 
 var player_x = canvas.width/2;
@@ -1432,6 +1543,23 @@ function execution(gameRunning1) {
 
         window.requestAnimationFrame(execution);
     }
+    else if(!gameRunning && gameOverScreen){
+        var canvas = document.getElementById("game_layer");
+        var context = canvas.getContext("2d");
+        context.fillStyle = "black";
+        context.fillRect(0, 0, canvas.width, canvas.height);
+        context.clearRect(0, 0, canvas.width, canvas.height)
+        context.drawImage(gameOverImg, (canvas.width/2) - (310/2), (canvas.height/2) - (218/2));
+        context.drawImage(backBtn, (canvas.width/2) - (backBtn.width/2), (canvas.height/2) + (backBtn.height/3));
+        context.font = "30px Comic Sans MS";
+        context.textAlign = "center";
+        context.fillText("SCORE: " + score, canvas.width/2, canvas.height/2);
+        canvas.addEventListener('click', function(event){
+            hideGameTables();
+            showMenuTable();
+        }, false);
+        window.cancelAnimationFrame(execution);
+    }
     else{window.cancelAnimationFrame(execution); return;}
 }
 
@@ -1475,11 +1603,12 @@ function playGame(){
 function endGame(){
     gameRunning = false;
     gamePaused = true;
+    gameOverScreen = true;
     execution(gameRunning)
     window.cancelAnimationFrame(execution);
-    textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
-    showMenuTable();
-    hideGameTables();
+    textBox.textContent = "Good Game! Visit Pitt Sustainability's website to learn more about how and where to properly dispose of your trash.";
+    //showMenuTable();
+    //hideGameTables();
     clearInterval(interval);
 }
 
@@ -1557,8 +1686,8 @@ function fillHighScores(){
     HSBox2.textContent = sortedNames[1] + " : " + sortedScores[1];
     HSBox3.textContent = sortedNames[2] + " : " + sortedScores[2];
 
-    console.log(topNames);
-    console.log(topScores)
+    //console.log(topNames);
+    //console.log(topScores);
 
 }
 
@@ -1602,4 +1731,14 @@ function showCreditsTable(){
 
 function hideCreditsTable(){
     document.getElementById("credits_table").style.visibility = "hidden";
+}
+
+//shows top and bottom game tables for when game is started
+function showIDPrompt(){
+    document.getElementById('IDPrompt').className = "visible";
+}
+
+//hides top and bottom game tables for when game ends
+function hideIDPrompt(){
+    document.getElementById('IDPrompt').className = "hidden";
 }

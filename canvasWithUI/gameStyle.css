@@ -192,6 +192,35 @@ td.unchosenWeapon
     border-collapse: collapse;
 }
 
+#IDPrompt{
+    position: absolute;
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+#submitB{
+    position: absolute;
+    top: 380px;
+    left: 183px;
+}
+
+#IDBoxTD{
+    width: 153px;
+    height: 21px;
+    position: absolute;
+    top: 280px;
+    left: 223px;
+}
+
+#badNameTD{
+    width: 310px;
+    height: 86px;
+    position: absolute;
+    top: 113px;
+    left: 145px;
+    visibility: hidden;
+}
+
 #menu_table td{
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -473,6 +502,15 @@ td.unchosenWeapon
 }
 
 #susLogoLB
+{
+    position: absolute;
+    left: 10px;
+    top: 628px;
+    width: 216px;
+    height: 72px;
+}
+
+#susLogoID
 {
     position: absolute;
     left: 10px;
