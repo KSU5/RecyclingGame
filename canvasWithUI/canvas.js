@@ -1389,7 +1389,12 @@ function setupNewGame(){
     rightEnemy = enemy30;
 
     setFXVol(FXSounds);
-    gameMusic.volume = MusicVolLvl / 100;
+    if((MusicVolLvl/100) < 0.03){
+        gameMusic.volume = 0;
+    }
+    else{
+        gameMusic.volume = MusicVolLvl / 100;
+    }
     gameMusic.play();
 }
 
