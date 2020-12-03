@@ -127,7 +127,7 @@ var textileEnemies = ["socks", "jeans", "shirts"];
 var recyclingEnemies = ["cans", "paper", "plastic bottles", "dead batteries"];
 var compostEnemies = ["pizza", "apples", "broccoli"];
 var landfillEnemies = ["straws", "plastic bags", "solo cups"];
-var hitMessages = ["Nice shot!", "Bullseye!"]
+var hitMessages = ["Nice shot! Press 'q' to pause the game if you need a break.", "Bullseye! Press 'q' to pause the game if you need a break."]
 var currWeapon = 0;
 
 //gamePaused is for if the game is paused (by using the q key)
