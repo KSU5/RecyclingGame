@@ -46,7 +46,7 @@ bagsPic.src = "all assets/normal/enemies/landfillenemy2.png";
 var cupsPic = new Image();
 cupsPic.src = "all assets/normal/enemies/landfillenemy3.png";
 
-
+//colorblind enemy images
 var socksPicCB = new Image();
 socksPicCB.src = "all assets/colorblind/enemies/textenemy2.png";
 var jeansPicCB = new Image();
@@ -74,11 +74,13 @@ bagsPicCB.src = "all assets/colorblind/enemies/landfillenemy2.png";
 var cupsPicCB = new Image();
 cupsPicCB.src = "all assets/colorblind/enemies/landfillenemy3.png";
 
+//enemy image arrays
 var textileEnemiesPics = [socksPic, jeansPic, shirtPic];
 var recyclingEnemiesPics = [canPic, paperPic, bottlePic, batteryPic];
 var compostEnemiesPics = [pizzaPic, applePic, broccoliPic];
 var landfillEnemiesPics = [strawsPic, bagsPic, cupsPic];
 
+//colorblind enemy image arrays
 var textileEnemiesPicsCB = [socksPicCB, jeansPicCB, shirtPicCB];
 var recyclingEnemiesPicsCB = [canPicCB, paperPicCB, bottlePicCB, batteryPicCB];
 var compostEnemiesPicsCB = [pizzaPicCB, applePicCB, broccoliPicCB];
@@ -866,10 +868,10 @@ function enemyRowGen(enemyRow)
 
     //if randNum = 1 then its recycling so we need a randNum2 between 0-3
     if(randNumo == 1){
-        randNumo2 = Math.floor(Math.random() * 4);
+        randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
     }
     else{ //else randNum2 between 0-2
-        randNumo2 = Math.floor(Math.random() * 3);
+        randNumo2 = Math.floor(Math.random() * textileEnemies.length);
     }
 
     if(enemyNums.length >= 2)
@@ -879,10 +881,10 @@ function enemyRowGen(enemyRow)
             randNumo = Math.floor(Math.random() * 4);
             //if randNum = 1 then its recycling so we need a randNum2 between 0-3
             if(randNumo == 1){
-                randNumo2 = Math.floor(Math.random() * 4);
+                randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
             }
             else{ //else randNum2 between 0-2
-                randNumo2 = Math.floor(Math.random() * 3);
+                randNumo2 = Math.floor(Math.random() * textileEnemies.length);
             }
         }
     }
@@ -893,10 +895,10 @@ function enemyRowGen(enemyRow)
             randNumo = Math.floor(Math.random() * 4);
             //if randNum = 1 then its recycling so we need a randNum2 between 0-3
             if(randNumo == 1){
-                randNumo2 = Math.floor(Math.random() * 4);
+                randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
             }
             else{ //else randNum2 between 0-2
-                randNumo2 = Math.floor(Math.random() * 3);
+                randNumo2 = Math.floor(Math.random() * textileEnemies.length);
             }
         }
     }

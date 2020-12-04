@@ -204,12 +204,19 @@ td.unchosenWeapon
     left: 183px;
 }
 
+#IDBox{
+    width: 183px;
+    height: 40px;
+    font-size: 20px;
+    /* text-align: center; */
+}
+
 #IDBoxTD{
-    width: 153px;
-    height: 21px;
+    width: 191px;
+    height: 46px;
     position: absolute;
-    top: 280px;
-    left: 223px;
+    top: 305px;
+    left: 204px;
 }
 
 #badNameTD{
