@@ -1242,6 +1242,7 @@ function getPittID1(){
     }
     else{
         if(user_id == ""){
+            document.getElementById("badNameTD").style.visibility = "hidden";
             hideIDPrompt();
             showMenuTable();
         }
@@ -1252,6 +1253,7 @@ function getPittID1(){
                 document.getElementById("badNameTD").style.visibility = "visible";
             }
             else{
+                document.getElementById("badNameTD").style.visibility = "hidden";
                 user_id = user_id.toUpperCase();
                 hideIDPrompt();
                 showMenuTable();
