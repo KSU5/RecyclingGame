@@ -150,6 +150,7 @@ var scores = database.collection('scores').doc("allScores");
 var topScores = [];
 var topNames = [];
 
+
 var allScores = null;
 var names = null;
 
@@ -211,6 +212,24 @@ function PopulateTopScores(n)
     //console.log(topScores);
     //console.log(topNames);
     scoresReady = true;
+}
+
+//returns the top score attached to a given player name as is recorded in the database. Will not take into account the clientside score.
+//  returns -1 if the player score is not found in the databse. 
+//  returns null if "allScores" and "names" have not been set. Call GetScores() and wait for it to complete if this is the case.
+function GetPlayerTopScore(playerName)
+{
+    if(allScores == null || name == null) return null;
+
+    var thisPlayerTopScore = -1;
+    for(i = 0; i < allScores.length; i++)
+    {
+        if(names[i] == playerName && allScores[i] > thisPlayerTopScore)
+        {
+            thisPlayerTopScore = allScores[i];
+        }
+    }
+    return thisPlayerTopScore;
 }
 //**************************End Database Functions**************************
 
@@ -1260,6 +1279,7 @@ function getPittID1(){
             }
         }
     }
+    console.log("TopScore for " + user_id + " is " + GetPlayerTopScore(user_id))
 }
 
 
