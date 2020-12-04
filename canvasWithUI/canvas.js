@@ -150,7 +150,6 @@ var scores = database.collection('scores').doc("allScores");
 var topScores = [];
 var topNames = [];
 
-
 var allScores = null;
 var names = null;
 
@@ -1279,7 +1278,6 @@ function getPittID1(){
             }
         }
     }
-    console.log("TopScore for " + user_id + " is " + GetPlayerTopScore(user_id))
 }
 
 
@@ -1414,6 +1412,8 @@ function setupNewGame(){
     lowestY = enemy21.y + enemyHeight;
     leftEnemy = enemy21;
     rightEnemy = enemy30;
+    leftMostCol = 0;
+    rightMostCol = 9;
 
     setFXVol(FXSounds);
     if((MusicVolLvl/100) < 0.03){
@@ -1703,6 +1703,20 @@ function scoreboardMenu(){
 }
 
 function fillHighScores(){
+    var userTS;
+    if(user_id == ""){
+        userTS = "No Pitt ID entered";
+        HSBoxPlayer.textContent = userTS;
+    }
+    else{
+        userTS = GetPlayerTopScore(user_id);
+        if(userTS == -1 || userTS == null){
+            HSBoxPlayer.textContent = user_id + " : " + 0;
+        }
+        else{
+            HSBoxPlayer.textContent = user_id + " : " + userTS;
+        }
+    }
     var TSArr = topScores.slice();
     var TSNames = topNames.slice();
 
@@ -1715,7 +1729,6 @@ function fillHighScores(){
         var maxScoreName = TSNames[maxScoreIndex];
         sortedScores.push(TSArr.splice(maxScoreIndex, 1));
         sortedNames.push(TSNames.splice(maxScoreIndex, 1));
-
     }
 
 
