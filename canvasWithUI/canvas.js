@@ -308,11 +308,13 @@ function key_up_handler(event){
             if(!gamePaused)
             {
                 textBox.textContent = "Press the q key to resume the game!";
+                gameMusic.pause();
                 gamePaused = true;
             }
             else
             {
                 astronautTalks(enemyNums);
+                gameMusic.play();
                 gamePaused = false;
             }
         }
@@ -1049,6 +1051,7 @@ function astronautTalks(trashNumxs)
 /* for when the player loses the game*/
 function youLose()
 {
+    HPBox.textContent = "HP = " + HP;
     gameMusic.pause();
     gameMusic.currentTime = 0;
     lossSound.play();
