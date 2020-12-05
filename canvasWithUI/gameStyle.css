@@ -525,3 +525,11 @@ td.unchosenWeapon
     width: 216px;
     height: 72px;
 }
+
+#controlsTD{
+    position: absolute;
+    height: 56px;
+    width: 310px;
+    top: 587px;
+    left: 145px;
+}

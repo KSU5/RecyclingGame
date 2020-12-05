@@ -9,6 +9,13 @@ document.addEventListener("keydown",key_down_handler,false);
 document.addEventListener("keyup",key_up_handler,false);
 document.addEventListener("keypress",key_press_handler,false);
 
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
+
 //all audio objects for different sounds/game music
 var gameMusic = new Audio("all assets/sound effects/game sound.mp3");
 gameMusic.loop = true;
@@ -125,10 +132,19 @@ var HP = 3;
 //trash and weaponNames indexes coordinate with eachother
 var trash = ["textile", "recycling", "compost", "landfill"];
 var weaponNames = ["Textile Teleporter", "Recycling Rocket", "Compost Cannon", "Landfill Laser"];
+
+//enemies arrays
 var textileEnemies = ["socks", "jeans", "shirts"];
 var recyclingEnemies = ["cans", "paper", "plastic bottles", "dead batteries"];
 var compostEnemies = ["pizza", "apples", "broccoli"];
 var landfillEnemies = ["straws", "plastic bags", "solo cups"];
+
+//end of life arrays
+var textileEnemiesEndOfLife = ["one of Pitt's textile recycling bins", "Thriftsburgh", "Thriftsburgh"];
+var recyclingEnemiesEndOfLife = ["curbside recycling", "curbside recycling", "curbside recycling", "Pitt's on-campus battery recycling"];
+var compostEnemiesEndOfLife = ["a composting bin", "a composting bin", "a composting bin"];
+var landfillEnemiesEndOfLife = ["a trash can", "a trash can", "a trash can"];
+
 var hitMessages = ["Nice shot! Press 'q' to pause the game if you need a break.", "Bullseye! Press 'q' to pause the game if you need a break."]
 var currWeapon = 0;
 
@@ -361,7 +377,6 @@ function key_press_handler(event){
         else if(event.keyCode == 40){
         weapon_down = true;
         }
-        
         
     }
 }
@@ -890,8 +905,14 @@ function enemyRowGen(enemyRow)
     if(randNumo == 1){
         randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
     }
-    else{ //else randNum2 between 0-2
+    else if (randNumo == 0){ //else randNum2 between 0-2
         randNumo2 = Math.floor(Math.random() * textileEnemies.length);
+    }
+    else if(randNumo == 2){
+        randNumo2 = Math.floor(Math.random() * compostEnemies.length);
+    }
+    else if(randNumo == 3){
+        randNumo2 = Math.floor(Math.random() * landfillEnemies.length);
     }
 
     if(enemyNums.length >= 2)
@@ -903,8 +924,14 @@ function enemyRowGen(enemyRow)
             if(randNumo == 1){
                 randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
             }
-            else{ //else randNum2 between 0-2
+            else if (randNumo == 0){ //else randNum2 between 0-2
                 randNumo2 = Math.floor(Math.random() * textileEnemies.length);
+            }
+            else if(randNumo == 2){
+                randNumo2 = Math.floor(Math.random() * compostEnemies.length);
+            }
+            else if(randNumo == 3){
+                randNumo2 = Math.floor(Math.random() * landfillEnemies.length);
             }
         }
     }
@@ -913,12 +940,18 @@ function enemyRowGen(enemyRow)
         while(randNumo == enemyNums[2] && randNumo2 == enemyNums[3])
         {
             randNumo = Math.floor(Math.random() * 4);
-            //if randNum = 1 then its recycling so we need a randNum2 between 0-3
-            if(randNumo == 1){
+             //if randNum = 1 then its recycling so we need a randNum2 between 0-3
+             if(randNumo == 1){
                 randNumo2 = Math.floor(Math.random() * recyclingEnemies.length);
             }
-            else{ //else randNum2 between 0-2
+            else if (randNumo == 0){ //else randNum2 between 0-2
                 randNumo2 = Math.floor(Math.random() * textileEnemies.length);
+            }
+            else if(randNumo == 2){
+                randNumo2 = Math.floor(Math.random() * compostEnemies.length);
+            }
+            else if(randNumo == 3){
+                randNumo2 = Math.floor(Math.random() * landfillEnemies.length);
             }
         }
     }
@@ -960,11 +993,7 @@ function astronautTalks(trashNumxs)
         //if the row of enemies trashNumber is 0 then it is a textile enemy
         if(trashNumxs[x] == 0)
         {
-            //if the next trashNumber is 1 then it is socks and is sent to pitts textile recycling bins
-            if(trashNumxs[x+1] == 1){
-                endOfLife = "one of Pitt's textile recycling bins";
-            }
-            else {endOfLife = "Thriftsburgh";} //or else it is jeans or a shirt, so its sent to thriftsburg
+            endOfLife = textileEnemiesEndOfLife[trashNumxs[x+1]];
 
             /* this checks for whether the end of life option is the same as another enemies 
                 so that it isnt repeated in the sentence, doesnt need to be changed */
@@ -985,11 +1014,7 @@ function astronautTalks(trashNumxs)
         }
         else if(trashNumxs[x] == 1) //else if the trashNumber is 1, then it is a recycling enemy
         {
-            //if the next trashNumber is 3, then it is a dead battery so it needs to be sent to pitts on campus battery recycling
-            if(trashNumxs[x+1] == 3){
-                endOfLife = "Pitt's on-campus battery recycling";
-            }
-            else {endOfLife = "curbside recycling";} //or else it is one of the other 3 recycling items, which go to curbside recycling
+            endOfLife = recyclingEnemiesEndOfLife[trashNumxs[x+1]];
 
             /* this checks for whether the end of life option is the same as another enemies 
                 so that it isnt repeated in the sentence, doesnt need to be changed */
@@ -1008,8 +1033,7 @@ function astronautTalks(trashNumxs)
         }
         else if(trashNumxs[x] == 2) //is if trashNum is 2, then it is a composting enemy
         {
-            //all composting enemies go to a composting bin
-            endOfLife = "a composting bin";
+            endOfLife = compostEnemiesEndOfLife[trashNumxs[x+1]];
 
             /* this checks for whether the end of life option is the same as another enemies 
                 so that it isnt repeated in the sentence, doesnt need to be changed */
@@ -1028,8 +1052,7 @@ function astronautTalks(trashNumxs)
         }
         else if(trashNumxs[x] == 3) //else if trashNums is 3 then it is a landfill enemy
         {
-            //all landfill enemies go to a trash can
-            endOfLife = "a trash can";
+            endOfLife = landfillEnemiesEndOfLife[trashNumxs[x+1]];
 
             /* this checks for whether the end of life option is the same as another enemies 
                 so that it isnt repeated in the sentence, doesnt need to be changed */
