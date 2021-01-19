@@ -1,4 +1,0 @@
-enemy 20x20
-ship 40x30
-bullet 6x10
-backdrop 562 x586
