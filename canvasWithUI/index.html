@@ -12,42 +12,48 @@
 
     <!-- TODO: Add SDKs for Firebase products that you want to use
         https://firebase.google.com/docs/web/setup#available-libraries -->
-    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-database.js"></script>
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-analytics.js"></script> -->
+    <!-- <script src="https://www.gstatic.com/firebasejs/8.0.1/firebase-firestore.js"></script> -->
 
 
     <script>
+        //pittrecyclinggame-f5bae
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
-    var firebaseConfig = {
-        apiKey: "AIzaSyCn3S2xi1Nx_GJ8IXH2OKlRO9EwSWEPtt4",
-        authDomain: "recyclinggame-9c011.firebaseapp.com",
-        databaseURL: "https://recyclinggame-9c011.firebaseio.com",
-        projectId: "recyclinggame-9c011",
-        storageBucket: "recyclinggame-9c011.appspot.com",
-        messagingSenderId: "610682367885",
-        appId: "1:610682367885:web:49f417802095b33a3b17c4",
-        measurementId: "G-1Z430N8MS7"
-    };
+const firebaseConfig = {
+  apiKey: "AIzaSyAE-vpqvRVDvyLQX5bMRv-Vq25GK1WhUXA",
+  authDomain: "pittrecyclinggame-f5bae.firebaseapp.com",
+  databaseURL: "https://pittrecyclinggame-f5bae-default-rtdb.firebaseio.com",
+  storageBucket: "pittrecyclinggame-f5bae.appspot.com"
+};
+
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
-    firebase.analytics();
+    // firebase.analytics();
     </script>
 
 </head>
 <body>
+
 <div id = "UIArea" height ="700" width = "600">
+
+    <!-- ------------------------------------PITT ID Prompt Table---------------------------------------------- -->
+
     <table id = "IDPrompt" height = "700" width= "600" background = "all assets/normal/UI/menus/IDPromptBG.png">
         <tr>
             <td id="badNameTD"><img id ="badName" src="all assets/normal/UI//menus/name error1.png"></td>
             <td id="IDBoxTD"> <input type="text" id="IDBox" name="IDBox"></td>
         </tr>
         <tr>
-            <td id="submitB"><img src="all assets/normal/UI/buttons/submit button.png" id="submitButton" onclick="getPittID1()"></td>
+            <td id="submitB"><img src="all assets/normal/UI/buttons/submit button.png" id="submitButton" onclick="getPittID()"></td>
         
             <td id="susLogoIDTD"><img id ="susLogoID" src="all assets/normal/UI/PittSustainability_stacked_green.png"></td>
         </tr>
     </table>
+
+    <!-- ------------------------------------Main Menu Table---------------------------------------------- -->
 
     <table id ="menu_table" class="hidden" height = "700" width = "600" background = "all assets/normal/UI/menus/mainmenu1.png">
         <tr>
@@ -73,12 +79,14 @@
         </tr>
 
     </table>
+
+    <!-- ------------------------------------Settings Menu Table---------------------------------------------- -->
     
     <table id = "setting_table" height = "700" width = "600" background = "all assets/normal/UI/menus/mainmenu1.png">
         <tr>
             <td id = "settingPannelTD"><img src ="all assets/normal/UI/menus/Settings Menu.png"> </td>
-            <td id = "slider"><input type="range" min="1" max="100" value="50" class="slider" id="FXVol"></td>
-            <td id = "slider_2"><input type="range" min="1" max="100" value="50" class="slider" id="MusicVol"></td>
+            <td id = "slider"><input type="range" min="1" max="100" value="10" class="slider" id="FXVol"></td>
+            <td id = "slider_2"><input type="range" min="1" max="100" value="10" class="slider" id="MusicVol"></td>
         </tr>
         <tr>
             <td class="square_button" onclick="colorBlindMode()"><img id="checkBox" class="trans" src ="all assets/normal/UI/overlay_assets/transparent.png"></td>
@@ -92,7 +100,7 @@
         </tr>
     </table>
 
-<!-- ---------------------------------------------------------------------------------- -->
+<!-- ------------------------------------High Scores Menu Table---------------------------------------------- -->
     
     <table id = "scoreboard_table" height = "700" width= "600" background = "all assets/normal/UI/menus/mainmenu1.png">
    
@@ -123,6 +131,8 @@
     
     </table>
 
+    <!-- ------------------------------------Credits Table---------------------------------------------- -->
+
     <table id = "credits_table" height = "700" width= "600" background = "all assets/normal/UI/menus/mainmenu1.png">
     
         <tr>
@@ -141,7 +151,7 @@
     
     </table>
 
-    <!-- ------------------------------------------------------------------------- -->
+    <!-- ------------------------------------Gameplay Tables---------------------------------------------- -->
 
     <table id = "game_table" class="hidden" height="574" width="600" background="all assets/normal/UI/UPDATED_UI_TOP.png">
         <tr>
@@ -151,7 +161,6 @@
 
             </td></tr>
         <tr>
-            <!-- Originally 400 x 400 -->
             <td COLSPAN=3 background="all assets/normal/UI/unanimated-back.png"><canvas id = "game_layer" width = "600" height="535"></canvas></td>
         </tr>
     </table>
@@ -170,6 +179,8 @@
             <td id="landfillWeaponBox"><img src="all assets/normal/weapons/landfillWeapon.png" alt=""></td>
         </tr>
     </table>
+
+
     <script src = "canvas.js"></script>
 </div>
 </body>

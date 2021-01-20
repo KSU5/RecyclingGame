@@ -1,10 +1,5 @@
 
-//MAYBE HARD DIFFICULTY WHERE EACH ROW = DIFFERENT TYPE OF ENEMY
-//IF THIS IS ADDED THEN UPDATE PROJECTILE TO NOT GO THRU ENEMIES?
-
-//change keys used to play game or how they function in browsers
-//YOULOSE FUNCT
-
+//event listeners for key presses
 document.addEventListener("keydown",key_down_handler,false);
 document.addEventListener("keyup",key_up_handler,false);
 document.addEventListener("keypress",key_press_handler,false);
@@ -101,14 +96,94 @@ backBtn.src = "all assets/normal/UI/buttons/backbutton.png";
 
 var FXSounds = [enemyKillSound, lossSound, wrongWeaponSound, playerHitSound, shootSound];
 
-var FXVolLvl = 50;
-var MusicVolLvl = 50;
+var FXVolLvl = 10;
+var MusicVolLvl = 10;
 
 //for colorblind mode
 var colorblind = false;
 
 var canvas = document.getElementById("game_layer");
 var context = canvas.getContext("2d");
+
+//trash and weaponNames indexes coordinate with eachother
+var trash = ["textile", "recycling", "compost", "landfill"];
+var weaponNames = ["Textile Teleporter", "Recycling Rocket", "Compost Cannon", "Landfill Laser"];
+
+var player_x = canvas.width/2;
+var player_y = 475;
+var player1;
+var projectile;
+
+var enemy1;
+var enemy2;
+var enemy3;
+var enemy4;
+var enemy5;
+var enemy6;
+var enemy7;
+var enemy8;
+var enemy9;
+var enemy10;
+
+var enemy11;
+var enemy12;
+var enemy13;
+var enemy14;
+var enemy15;
+var enemy16;
+var enemy17;
+var enemy18;
+var enemy19;
+var enemy20;
+
+var enemy21;
+var enemy22;
+var enemy23;
+var enemy24;
+var enemy25;
+var enemy26;
+var enemy27;
+var enemy28;
+var enemy29;
+var enemy30;
+
+var lowestY;
+
+var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
+var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10];
+var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20];
+var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
+/* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
+    element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
+var enemyNums;
+var enemyNums1;
+var enemyNums2;
+var enemyNums3;
+var textBox = document.getElementById("textBox");
+textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
+
+//used to track the leftmost and rightmost enemies for when they hit the canvas ends
+var leftEnemy = enemy21;
+var rightEnemy = enemy30;
+
+//objects for updating scoreboard, weapon and HP boxes
+var currWeapon = 0;
+var scoreboard = document.getElementById("scoreboard");
+var textileWeaponBox = document.getElementById("textileWeaponBox");
+var recyclingWeaponBox = document.getElementById("recyclingWeaponBox");
+var compostWeaponBox = document.getElementById("compostWeaponBox");
+var landfillWeaponBox = document.getElementById("landfillWeaponBox");
+var weaponNameBox = document.getElementById("weaponNameBox");
+weaponNameBox.textContent = weaponNames[currWeapon];
+
+var HPBox = document.getElementById("hpBox");
+
+var interval;
+
+var HSBox1 = document.getElementById("highscore1");
+var HSBox2 = document.getElementById("highscore2");
+var HSBox3 = document.getElementById("highscore3");
+var HSBoxPlayer = document.getElementById("playerHighscore");
 
 var gameOverScreen = false;
 
@@ -127,17 +202,16 @@ var enemyWidth = 30;
 var enemyHeight = 30;
 var enemiesKilled = 0;
 
+var user_id;
+var score = 0;
 var HP = 3;
-
-//trash and weaponNames indexes coordinate with eachother
-var trash = ["textile", "recycling", "compost", "landfill"];
-var weaponNames = ["Textile Teleporter", "Recycling Rocket", "Compost Cannon", "Landfill Laser"];
 
 //enemies arrays
 var textileEnemies = ["socks", "jeans", "shirts"];
 var recyclingEnemies = ["cans", "paper", "plastic bottles", "dead batteries"];
 var compostEnemies = ["pizza", "apples", "broccoli"];
 var landfillEnemies = ["straws", "plastic bags", "solo cups"];
+var enemyTypes = [,textileEnemies, recyclingEnemies, compostEnemies, landfillEnemies];
 
 //end of life arrays
 var textileEnemiesEndOfLife = ["one of Pitt's textile recycling bins", "Thriftsburgh", "Thriftsburgh"];
@@ -146,7 +220,6 @@ var compostEnemiesEndOfLife = ["a composting bin", "a composting bin", "a compos
 var landfillEnemiesEndOfLife = ["a trash can", "a trash can", "a trash can"];
 
 var hitMessages = ["Nice shot! Press 'q' to pause the game if you need a break.", "Bullseye! Press 'q' to pause the game if you need a break."]
-var currWeapon = 0;
 
 //gamePaused is for if the game is paused (by using the q key)
 var gamePaused = true;
@@ -157,96 +230,155 @@ var gameRunning = false;
 var leftMostCol = 0;
 var rightMostCol = 9;
 
-var score = 0;
 
-//**************************Database Functions**************************
-var database = firebase.firestore();
-var scores = database.collection('scores').doc("allScores");
 
-var topScores = [];
-var topNames = [];
 
-var allScores = null;
-var names = null;
+var DB = firebase.database();
 
-var numberOfTopScoresToGet = 3;
-var scoresReady = false;
-//
-function GetScores()
-{
-    scoresReady = false;
-    scores.get().then(function(doc) {
-        if (doc.exists) {
-            allScores = doc.data().score;
-            names = doc.data().name;
-            PopulateTopScores(numberOfTopScoresToGet);
-        }
-    }).catch(function(error) {
-        console.log("Error getting scores:", error);
-    });
+function writeUserData(userId, TS) {
+    //firebase.database()
+    DB.ref('users/' + userId).set(TS);
+
+    var scoreString = TS + "_" + userId;
+
+    /* DB.ref('scores/' + scoreString).set({
+        username: userId,
+        topscore: TS
+      }); */
+  }
+
+/************************************Database Functions************************************/
+var top3;
+var userHigh;
+
+var sortedScores = [];
+var sortedNames = [];
+
+var top3Low;
+
+function getTop3(){
+    var top3Promise = DB.ref('users').orderByValue().limitToLast(3).once('value').then((snapshot) => {;
+    top3 = snapshot.val();
+    sortTop3();
+    hideMenuTable();
+    fillHighScores();
+    showScoreboardTable();
+    //console.log(snapshot.val());
+    //console.log(Object.keys(top3));
+    //console.log(top3);
+});
+
 }
-GetScores();
 
-//Populates the topNames and topScores array
-function PopulateTopScores(n)
-{
-    topScores = [];
-    topNames = [];
+function sortTop3(){
+    var TSArr = Object.values(top3);
+    var TSNames = Object.keys(top3);
 
-    //For every score in the scores array
-    for(var i = 0; i < allScores.length; i++)
-    {
-        //If the return array is less than the scores array
-        if(topScores.length < n)
-        {
-            topScores.push(allScores[i]);
-            topNames.push(names[i]);
+    for(var ll = 0; ll < 3; ll++){
+        var maxScore = Math.max.apply(Math, TSArr);
+        var maxScoreIndex = TSArr.indexOf(maxScore);
+        var maxScoreName = TSNames[maxScoreIndex];
+        sortedScores.push(TSArr.splice(maxScoreIndex, 1));
+        sortedNames.push(TSNames.splice(maxScoreIndex, 1));
+    }
+
+    top3Low = sortedScores[2];
+}
+
+function adjustTop3(userId, newTS){
+
+    var ind;
+    if(sortedNames[0].toString() == userId){
+        ind = 0;
+    }
+    else if(sortedNames[1].toString() == userId){
+        ind = 1;
+    }
+    else if(sortedNames[2].toString() == userId){
+        ind = 2;
+    }
+    else{
+        ind = -1;
+    }
+    //console.log(ind);
+    
+    //if users top score in top scores
+    if(ind>=0){
+        //if its the first then just replace score
+        if(ind == 0){
+            sortedScores[0] = newTS;
         }
-        else
-        {
-            //Find the minimum value in the current list of top scores
-            var minIndex = -1;
-            var minValue = Number.MAX_SAFE_INTEGER;
-            for(var j = 0; j < topScores.length; j++)
-            {
-                if(topScores[j] < minValue)
-                {
-                    minIndex = j;
-                    minValue = topScores[j];
+        else if(ind == 1){
+            if(newTS > sortedScores[1]){
+                if(newTS >= sortedScores[0]){
+                    var tempName = sortedNames[0];
+                    var tempScore = sortedScores[0];
+                    sortedNames[0] = user_id;
+                    sortedScores[0] = newTS;
+                    sortedNames[1] = tempName;
+                    sortedScores[1] = tempScore;
+                }
+                else{
+                    sortedScores[1] = newTS;
                 }
             }
+        }
+        else if(ind == 2){
+            if(newTS > sortedScores[0]){
+                sortedScores[2] = sortedScores[1];
+                sortedNames[2] = sortedNames[1];
+                sortedScores[1] = sortedScores[0];
+                sortedNames[1] = sortedNames[0];
+                sortedScores[0] = newTS;
+                sortedNames[0] = userId;
 
-            //If the current score is greater than this minimum, replace it
-            if(allScores[i] > minValue)
-            {
-                topScores[minIndex] = allScores[i];
-                topNames[minIndex] = names[i];
+            }
+            else if(newTS > sortedScores[1]){
+                sortedScores[2] = sortedScores[1];
+                sortedNames[2] = sortedNames[1];
+                sortedScores[1] = newTS;
+                sortedNames[1] = userId;
+            }
+            else{
+                sortedScores[2] = newTS;
             }
         }
-    } 
-    //console.log(topScores);
-    //console.log(topNames);
-    scoresReady = true;
-}
+    }
+    else{
+        if(newTS > sortedScores[0]){
+            sortedScores[2] = sortedScores[1];
+            sortedNames[2] = sortedNames[1];
 
-//returns the top score attached to a given player name as is recorded in the database. Will not take into account the clientside score.
-//  returns -1 if the player score is not found in the databse. 
-//  returns null if "allScores" and "names" have not been set. Call GetScores() and wait for it to complete if this is the case.
-function GetPlayerTopScore(playerName)
-{
-    if(allScores == null || name == null) return null;
+            sortedScores[1] = sortedScores[0];
+            sortedNames[1] = sortedNames[0];
 
-    var thisPlayerTopScore = -1;
-    for(i = 0; i < allScores.length; i++)
-    {
-        if(names[i] == playerName && allScores[i] > thisPlayerTopScore)
-        {
-            thisPlayerTopScore = allScores[i];
+            sortedScores[0] = newTS;
+            sortedNames[0] = userId;
+        }
+        else if(newTS > sortedScores[1]){
+            sortedScores[2] = sortedScores[1];
+            sortedNames[2] = sortedNames[1];
+
+            sortedScores[1] = newTS;
+            sortedNames[1] = userId;
+        }
+        else if(newTS > sortedScores[2]){
+            sortedScores[2] = newTS;
+            sortedNames[2] = userId;
         }
     }
-    return thisPlayerTopScore;
+    top3Low = sortedScores[2];
 }
-//**************************End Database Functions**************************
+
+//getTop3();
+
+function getTS(userId){
+    firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
+        userHigh = snapshot.val() || 0;
+        //console.log(userHigh);
+      });
+}
+/************************************End Database Functions************************************/
 
 function key_down_handler(event){
     if(gameRunning){
@@ -381,6 +513,8 @@ function key_press_handler(event){
     }
 }
 
+/***********************************"Object" Functions*******************************/
+
 function Projectile(x, y){
     this.x = x;
     this.y = y;
@@ -390,6 +524,7 @@ function Projectile(x, y){
     this.trashType = trash[currWeapon];
     this.img = new Image(this.x, this.y);
 }
+
 Projectile.prototype.draw = function(enemyShootin){
 
     context.drawImage(this.img, this.x, this.y);
@@ -423,7 +558,6 @@ Projectile.prototype.update = function(){
     }
 }
 
-
 function Player(x, y, user_id){
     this.id = user_id;
     this.x = x;
@@ -433,13 +567,8 @@ function Player(x, y, user_id){
     this.speedx = 2.0;
     this.hp = 3;
     this.img = new Image();
-    if(colorblind){
-        this.img.src = "all assets/colorblind/ship/spaceship.png";
-    }
-    else{
-        this.img.src = "all assets/normal/ship/spaceship.png";
-    }
 }
+
 Player.prototype.draw = function(){
     context.drawImage(this.img, this.x, this.y);
 };
@@ -490,13 +619,8 @@ function Enemy(x, y){
     this.weapon.trashType = "enemy";
     this.weapon.speedy = 4.5;
     this.img = new Image();
-    if(colorblind){
-        this.weapon.img.src = "all assets/colorblind/bullets/enemyprojectile1.png"
-    }
-    else{
-        this.weapon.img.src = "all assets/normal/bullets/enemyprojectile1.png";
-    }
 }
+
 Enemy.prototype.draw = function()
 {
     //for drawing enemy projectile when game is paused
@@ -510,15 +634,12 @@ Enemy.prototype.draw = function()
         if(this.y + enemyHeight >= lowestY){
             lowestY = this.y + enemyHeight;
         }
-        //context.fillStyle = "green";
         context.drawImage(this.img, this.x, this.y);
     }
-    else
-    {
-
-    }
+    
 };
 
+//updates enemys coordinates
 Enemy.prototype.update = function(){
 
     this.x = this.x + this.direction * this.speedy;
@@ -546,7 +667,69 @@ Enemy.prototype.update = function(){
     
 }
 
+//to drop and align enemies when they hit either side of the canvas
+function enemiesDrop(dir)
+{
+    if(dir == "l"){
+        for(var i = 0; i < 10; i++)
+        {
+            if(i == leftMostCol)
+            {
+                enemiesR3[i].x = 1;
+                enemiesR2[i].x = 1;
+                enemiesR1[i].x = 1;
+                enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                enemiesR3[i].y += (enemyHeight/2);
+                enemiesR2[i].y += (enemyHeight/2);
+                enemiesR1[i].y += (enemyHeight/2);
+            }
+            else if(i > leftMostCol){
+                    enemiesR3[i].x = enemiesR3[i-1].x+54;
+                    enemiesR3[i].y += (enemyHeight/2);
+                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                    enemiesR2[i].x = enemiesR2[i-1].x+54;
+                    enemiesR2[i].y += (enemyHeight/2);
+                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                    enemiesR1[i].x = enemiesR1[i-1].x+54;
+                    enemiesR1[i].y += (enemyHeight/2);
+                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
+            }
+        }
+    }
+    else if(dir == "r"){
+        for(var i = 9; i >= 0; i--)
+        {
+            if(i == rightMostCol)
+            {
+                enemiesR3[i].x = canvas.width-enemyWidth-1;
+                enemiesR2[i].x = canvas.width-enemyWidth-1;
+                enemiesR1[i].x = canvas.width-enemyWidth-1;
+                enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                enemiesR1[i].direction = enemiesR1[i].direction * -1;
+                enemiesR3[i].y += (enemyHeight/2);
+                enemiesR2[i].y += (enemyHeight/2);
+                enemiesR1[i].y += (enemyHeight/2);
+            }
+            else if(i < rightMostCol){
+                    enemiesR3[i].x = enemiesR3[i+1].x-54;
+                    enemiesR3[i].y += (enemyHeight/2);
+                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
+                    enemiesR2[i].x = enemiesR2[i+1].x-54;
+                    enemiesR2[i].y += (enemyHeight/2);
+                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
+                    enemiesR1[i].x = enemiesR1[i+1].x-54;
+                    enemiesR1[i].y += (enemyHeight/2);
+                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
+            }
+        }
+    }
+}
+
 //adds enemy image to a single enemy based on what type it is
+//also adds enemys projectile image
 function addEnemyImage(currEn)
 {
     if(!colorblind){
@@ -617,6 +800,7 @@ function addProjectileImage(playerProjectile){
     }
 }
 
+//adds spaceship image to Player
 function addShipImage(playerObj){
     if(colorblind){
         playerObj.img.src = "all assets/colorblind/ship/spaceship.png";
@@ -626,67 +810,7 @@ function addShipImage(playerObj){
     }
 }
 
-//to drop and align enemies when they hit either side of the canvas
-function enemiesDrop(dir)
-{
-    if(dir == "l"){
-        for(var i = 0; i < 10; i++)
-        {
-            if(i == leftMostCol)
-            {
-                enemiesR3[i].x = 1;
-                enemiesR2[i].x = 1;
-                enemiesR1[i].x = 1;
-                enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                enemiesR1[i].direction = enemiesR1[i].direction * -1;
-                enemiesR3[i].y += (enemyHeight/2);
-                enemiesR2[i].y += (enemyHeight/2);
-                enemiesR1[i].y += (enemyHeight/2);
-            }
-            else if(i > leftMostCol){
-                    enemiesR3[i].x = enemiesR3[i-1].x+54;
-                    enemiesR3[i].y += (enemyHeight/2);
-                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                    enemiesR2[i].x = enemiesR2[i-1].x+54;
-                    enemiesR2[i].y += (enemyHeight/2);
-                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                    enemiesR1[i].x = enemiesR1[i-1].x+54;
-                    enemiesR1[i].y += (enemyHeight/2);
-                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
-            }
-        }
-    }
-    else if(dir == "r"){
-        for(var i = 9; i >= 0; i--)
-        {
-            if(i == rightMostCol)
-            {
-                enemiesR3[i].x = canvas.width-enemyWidth-1;
-                enemiesR2[i].x = canvas.width-enemyWidth-1;
-                enemiesR1[i].x = canvas.width-enemyWidth-1;
-                enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                enemiesR1[i].direction = enemiesR1[i].direction * -1;
-                enemiesR3[i].y += (enemyHeight/2);
-                enemiesR2[i].y += (enemyHeight/2);
-                enemiesR1[i].y += (enemyHeight/2);
-            }
-            else if(i < rightMostCol){
-                    enemiesR3[i].x = enemiesR3[i+1].x-54;
-                    enemiesR3[i].y += (enemyHeight/2);
-                    enemiesR3[i].direction = enemiesR3[i].direction * -1;
-                    enemiesR2[i].x = enemiesR2[i+1].x-54;
-                    enemiesR2[i].y += (enemyHeight/2);
-                    enemiesR2[i].direction = enemiesR2[i].direction * -1;
-                    enemiesR1[i].x = enemiesR1[i+1].x-54;
-                    enemiesR1[i].y += (enemyHeight/2);
-                    enemiesR1[i].direction = enemiesR1[i].direction * -1;
-            }
-        }
-    }
-    //console.log(enemy1.y);
-}
+/*********************************End "Object" Functions*****************************/
 
 //function to detect whether player was hit by an enemy projectile, and make adjustments to game accodingly
 function PlayerCollisionDetection(enemyShooting) {
@@ -772,7 +896,6 @@ function enemyCollisionDetection(enemies) {
                 enemiesKilled++;
                 if(enemiesKilled >= enemies.length)
                 {
-                    //document.write("YOU WIN!");
                     respawnEnemies(enemies, true);
                     enemyNums = [];
                     enemyNums1 = enemyRowGen(enemiesR1);
@@ -788,15 +911,6 @@ function enemyCollisionDetection(enemies) {
                     leftMostCol = 0;
                     rightMostCol = 9;
                     enemiesKilled = 0;
-
-                    //COMMENTED OUT TO TEST ENEMY REGEN
-                    /* if(user_id == null){
-                        user_id = "Unknown Player"
-                        document.write("\nName: " + "Unknown Player" + " Score: " +score);
-                    }      
-                    else{
-                        document.write("\nName: " + user_id + " Score: " +score);
-                    } */
 
                 }
                 else if(currEnemy == leftEnemy || currEnemy == rightEnemy) //else if we shot the leftmost or rightmost enemy, update
@@ -894,7 +1008,7 @@ function updateWeaponBox(currWeap)
     weaponNameBox.textContent = weaponNames[currWeapon];
 }
 
-//generates a different type of enemies for each row, takes in array of a row of enemies
+//generates a type of enemy for the given row and assigns
 function enemyRowGen(enemyRow)
 {
     //random # between 0-3 for enemy type
@@ -914,6 +1028,7 @@ function enemyRowGen(enemyRow)
     else if(randNumo == 3){
         randNumo2 = Math.floor(Math.random() * landfillEnemies.length);
     }
+    console.log(enemyTypes[1].length);
 
     if(enemyNums.length >= 2)
     {
@@ -1097,16 +1212,30 @@ function youLose()
     gameMusic.currentTime = 0;
     lossSound.play();
 if(user_id != ""){
-    allScores.push(score);
-        names.push(user_id);
-        scores.update({
-            name: names,
-            score: allScores
-        })
+    
+    if(score > userHigh){
+        userHigh = score;
+        writeUserData(user_id, score);
+
+        if(score > top3Low){
+            console.log("Good Job!");
+            adjustTop3(user_id, score);
+        }
+    }
+
 }
-    GetScores();
 
     endGame();
+}
+
+function endGame(){
+    gameRunning = false;
+    gamePaused = true;
+    gameOverScreen = true;
+    execution(gameRunning)
+    window.cancelAnimationFrame(execution);
+    textBox.textContent = "Good Game! Visit Pitt Sustainability's website to learn more about how and where to properly dispose of your trash.";
+    clearInterval(interval);
 }
 
 /* used to update the rightmost/leftmost enemies when they are shot 
@@ -1192,6 +1321,8 @@ function createEnemies(){
     enemy28 = new Enemy(420,120);
     enemy29 = new Enemy(474,120);
     enemy30 = new Enemy(528,120);
+
+    lowestY = enemy21.y + enemyHeight;
 }
 
 function createPlayer(){
@@ -1230,51 +1361,35 @@ function respawnEnemies(enemyArr, pFlag)
 }
 
 /* respawns alive enemies after they hit the bottom */
-    function respawnAliveEnemies(enemyArr)
-    {
-        HP--;
-        if(HP <= 0){youLose();}
-        else{
-            HPBox.textContent = "HP = " + HP;
-            for(i = 0; i < enemies.length; i++)
+function respawnAliveEnemies(enemyArr)
+{
+    HP--;
+    if(HP <= 0){youLose();}
+    else{
+        HPBox.textContent = "HP = " + HP;
+        for(i = 0; i < enemies.length; i++)
+        {
+            if(i<10)
             {
-                if(i<10)
-                {
-                    enemyArr[i].y = 20;
-                }
-                else if(i>=10 && i <20)
-                {
-                    enemyArr[i].y = 70;
-                }
-                else if(i>=20 && i < 30)
-                {
-                    enemyArr[i].y = 120;
-                }
-                var iMod = i % 10;
-                enemyArr[i].x = 42 + (54*iMod);
-                enemyArr[i].direction = -1;
-                enemyArr[i].speedy = (enemyArr[i].speedy+0.1);
+                enemyArr[i].y = 20;
             }
+            else if(i>=10 && i <20)
+            {
+                enemyArr[i].y = 70;
+            }
+            else if(i>=20 && i < 30)
+            {
+                enemyArr[i].y = 120;
+            }
+            var iMod = i % 10;
+            enemyArr[i].x = 42 + (54*iMod);
+            enemyArr[i].direction = -1;
+            enemyArr[i].speedy = (enemyArr[i].speedy+0.1);
         }
     }
-
-var user_id;
-
-function getPittID(){
-    user_id = prompt("Please enter your PittID");
-    while(user_id == null){
-        user_id = prompt("Please enter a valid PittID");
-    }
-    var match = user_id.match(/^[a-zA-Z]{3}\d{1,3}$/);
-    //console.log(match[0]);
-    while(match == null){
-    user_id = prompt("Please enter a valid PittID");
-    match = user_id.match(/[a-zA-Z]{3}\d{1,3}/);
-    }
-    user_id = user_id.toUpperCase();
 }
 
-function getPittID1(){
+function getPittID(){
     user_id = document.getElementById("IDBox").value;
     //console.log("Hi");
     //console.log(user_id);
@@ -1296,6 +1411,7 @@ function getPittID1(){
             else{
                 document.getElementById("badNameTD").style.visibility = "hidden";
                 user_id = user_id.toUpperCase();
+                getTS(user_id);
                 hideIDPrompt();
                 showMenuTable();
             }
@@ -1303,81 +1419,6 @@ function getPittID1(){
     }
 }
 
-
-var player_x = canvas.width/2;
-var player_y = 475;
-var player1 = new Player(player_x, player_y, user_id);
-var projectile = new Projectile(player_x,player_y-(projectileHeight/2));
-
-var enemy1 = new Enemy(42,20);
-var enemy2 = new Enemy(96,20);
-var enemy3 = new Enemy(150,20);
-var enemy4 = new Enemy(204,20);
-var enemy5 = new Enemy(258,20);
-var enemy6 = new Enemy(312,20);
-var enemy7 = new Enemy(366,20);
-var enemy8 = new Enemy(420,20);
-var enemy9 = new Enemy(474,20);
-var enemy10 = new Enemy(528,20);
-
-var enemy11 = new Enemy(42,70);
-var enemy12 = new Enemy(96,70);
-var enemy13 = new Enemy(150,70);
-var enemy14 = new Enemy(204,70);
-var enemy15 = new Enemy(258,70);
-var enemy16 = new Enemy(312,70);
-var enemy17 = new Enemy(366,70);
-var enemy18 = new Enemy(420,70);
-var enemy19 = new Enemy(474,70);
-var enemy20 = new Enemy(528,70);
-
-var enemy21 = new Enemy(42,120);
-var enemy22 = new Enemy(96,120);
-var enemy23 = new Enemy(150,120);
-var enemy24 = new Enemy(204,120);
-var enemy25 = new Enemy(258,120);
-var enemy26 = new Enemy(312,120);
-var enemy27 = new Enemy(366,120);
-var enemy28 = new Enemy(420,120);
-var enemy29 = new Enemy(474,120);
-var enemy30 = new Enemy(528,120);
-
-var lowestY = enemy21.y + enemyHeight;
-
-var enemies = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10, enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20, enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
-var enemiesR1 = [enemy1, enemy2, enemy3, enemy4, enemy5, enemy6, enemy7, enemy8, enemy9, enemy10];
-var enemiesR2 = [enemy11, enemy12, enemy13, enemy14, enemy15, enemy16, enemy17, enemy18, enemy19, enemy20];
-var enemiesR3 = [enemy21, enemy22, enemy23, enemy24, enemy25, enemy26, enemy27, enemy28, enemy29, enemy30];
-/* enemyNums is an array of 2 numbers that is returned by Enemy Type Gen function where
-    element 0 is the general enemy/weapon type and element 1 is the specific type for image*/
-var enemyNums;
-var enemyNums1;
-var enemyNums2;
-var enemyNums3;
-var textBox = document.getElementById("textBox");
-textBox.textContent = "Click Play button to play the game! Use the up/down arrows to toggle between weapons and the b key to fire at enemies!";
-
-//used to track the leftmost and rightmost enemies for when they hit the canvas ends
-var leftEnemy = enemy21;
-var rightEnemy = enemy30;
-
-//objects for updating scoreboard, weapon and HP boxes
-var scoreboard = document.getElementById("scoreboard");
-var textileWeaponBox = document.getElementById("textileWeaponBox");
-var recyclingWeaponBox = document.getElementById("recyclingWeaponBox");
-var compostWeaponBox = document.getElementById("compostWeaponBox");
-var landfillWeaponBox = document.getElementById("landfillWeaponBox");
-var weaponNameBox = document.getElementById("weaponNameBox");
-weaponNameBox.textContent = weaponNames[currWeapon];
-
-var HPBox = document.getElementById("hpBox");
-
-var interval;
-
-var HSBox1 = document.getElementById("highscore1");
-var HSBox2 = document.getElementById("highscore2");
-var HSBox3 = document.getElementById("highscore3");
-var HSBoxPlayer = document.getElementById("playerHighscore");
 
 function setupNewGame(){
     
@@ -1412,12 +1453,6 @@ function setupNewGame(){
     weapon_shoot = false;
     enemiesKilled = 0;
     enemyFiring = false;
-
-    /* for(var a = 0; a < enemies.length; a++)
-    {
-        enemies[a].speedy = 0.4;
-        enemies[a].firing = false;
-    } */
 
     //still reseting vars, updating weaponBox and projectile type/image
     currWeapon = 0;
@@ -1618,6 +1653,9 @@ function execution(gameRunning1) {
 
 execution(gameRunning);
 
+/************************************Menu Functions************************************/
+
+//called when player clicks canvas to go back to main menu after losing
 function backToMenu(){
     canvas = document.getElementById("game_layer");
     canvas.removeEventListener('click', backToMenu);
@@ -1645,11 +1683,15 @@ function hideMenuTable(){
     
 }
 
-//to show menu table, potentially called after player loses and score is displayed?
+/*to show menu table, called when back button on various menu tables are clicked
+ or after verifying blank/valid PittID*/
 function showMenuTable(){
     document.getElementById('menu_table').style.visibility = "visible";
 }
 
+/*hides main menu table and makes game tables visible
+ *
+ * called when play button is clicked*/
 function playGame(){
     //set game to runnning and not paused
     gameRunning = true;
@@ -1657,41 +1699,33 @@ function playGame(){
     hideMenuTable();
     setupNewGame();
     showGameTables();
-    //update textbox and call execution
+    //call execution
     execution(gameRunning);
 }
 
-function endGame(){
-    gameRunning = false;
-    gamePaused = true;
-    gameOverScreen = true;
-    execution(gameRunning)
-    window.cancelAnimationFrame(execution);
-    textBox.textContent = "Good Game! Visit Pitt Sustainability's website to learn more about how and where to properly dispose of your trash.";
-    //showMenuTable();
-    //hideGameTables();
-    clearInterval(interval);
-}
-
+/*hides main menu table and makes settings table visible
+* also handles input on the FX and Music volume level sliders
+*
+* called when settings button is clicked*/
 function settingsMenu(){
     hideMenuTable();
     showSettingTable();
     var FXSlider = document.getElementById("FXVol");
 
-// Update the current slider value (each time you drag the slider handle)
-FXSlider.oninput = function() {
-    FXVolLvl = this.value;
+    // Update the current slider value (each time you drag the slider handle)
+    FXSlider.oninput = function() {
+        FXVolLvl = this.value;
+    }
+
+    var MusicSlider = document.getElementById("MusicVol");
+
+    // Update the current slider value (each time you drag the slider handle)
+    MusicSlider.oninput = function() {
+        MusicVolLvl = this.value;
+    }
 }
 
-var MusicSlider = document.getElementById("MusicVol");
-
-// Update the current slider value (each time you drag the slider handle)
-MusicSlider.oninput = function() {
-    MusicVolLvl = this.value;
-}
-
-}
-
+//sets volume for FX sounds
 function setFXVol(FXArr){
     for(var tt = 0; tt < FXArr.length; tt++){
         var vol = FXVolLvl / 100;
@@ -1700,31 +1734,49 @@ function setFXVol(FXArr){
     }
 }
 
+/*hides settings table and makes main menu table visible
+*
+* called when back button on settings menu is clicked*/
 function settingsBackMenu(){
     hideSettingTable();
     showMenuTable();
 }
 
+/*toggles colorblind mode on/off
+*
+* called when user clicks colorblind toggle box*/
 function colorBlindMode(){
     var checkBox = document.getElementById("checkBox");
+
+    //if box is checked, turn off colorblind mode by setting var to false and uncheck box by hiding check img
     if(checkBox.className != "trans"){
         colorblind = false;
         checkBox.className = "trans";
         checkBox.src="all assets/normal/UI/overlay_assets/transparent.png";
     }
-    else{
+    else{ //else add check to box by making it visible and turn on colorblind mode by setting var to true
         colorblind = true;
         checkBox.className = "chkd";
         checkBox.src="all assets/normal/UI/overlay_assets/colorblindcheck1.png";
     }
 }
 
+/*hides main menu table and shows high scores table
+*
+* called when scores button is clicked*/
 function scoreboardMenu(){
-    hideMenuTable();
-    fillHighScores();
-    showScoreboardTable(); 
+    //if the sortedNames (or sortedScores) array is empty, load then top 3 from DB
+    if(sortedNames.length == 0){
+        getTop3();
+    }
+    else{ //else hide main menu table and populate HS menu and make visible
+        hideMenuTable();
+        fillHighScores();
+        showScoreboardTable();
+    }
 }
 
+//populate high scores menu boxes with 3 highest scores and users highest score
 function fillHighScores(){
     var userTS;
     if(user_id == ""){
@@ -1732,7 +1784,7 @@ function fillHighScores(){
         HSBoxPlayer.textContent = userTS;
     }
     else{
-        userTS = GetPlayerTopScore(user_id);
+        userTS = userHigh;
         if(userTS == -1 || userTS == null){
             HSBoxPlayer.textContent = user_id + " : " + 0;
         }
@@ -1740,69 +1792,61 @@ function fillHighScores(){
             HSBoxPlayer.textContent = user_id + " : " + userTS;
         }
     }
-    var TSArr = topScores.slice();
-    var TSNames = topNames.slice();
-
-    var sortedScores = [];
-    var sortedNames = [];
-
-    for(var ll = 0; ll < 3; ll++){
-        var maxScore = Math.max.apply(Math, TSArr);
-        var maxScoreIndex = TSArr.indexOf(maxScore);
-        var maxScoreName = TSNames[maxScoreIndex];
-        sortedScores.push(TSArr.splice(maxScoreIndex, 1));
-        sortedNames.push(TSNames.splice(maxScoreIndex, 1));
-    }
-
-
 
     HSBox1.textContent = sortedNames[0] + " : " + sortedScores[0];
     HSBox2.textContent = sortedNames[1] + " : " + sortedScores[1];
     HSBox3.textContent = sortedNames[2] + " : " + sortedScores[2];
-
-    //console.log(topNames);
-    //console.log(topScores);
-
 }
 
-
+/*hides high scores table and makes main menu table visible
+*
+  called when back button on high scores menu is clicked*/
 function scoreboardBackMenu(){
     hideScoreboardTable(); 
     showMenuTable();
 }
 
-
+/*hides main menu table and credits table visible
+*
+  called when credits button on main menu is clicked*/
 function creditsMenu(){
     hideMenuTable();
     showCreditsTable(); 
 }
 
-
+/*hides credits table and makes main menu table visible
+*
+  called when back button on credits menu is clicked*/
 function creditsBackMenu(){
     hideCreditsTable(); 
     showMenuTable();
 }
 
+/*makes settings table visible when settings button is clicked*/
 function showSettingTable(){
     document.getElementById("setting_table").style.visibility = "visible";
 }
-
+/*hides settings table when back button is clicked*/
 function hideSettingTable(){
     document.getElementById("setting_table").style.visibility = "hidden";
 }
 
+/*makes high scores table visible when scores button is clicked*/
 function showScoreboardTable(){
     document.getElementById("scoreboard_table").style.visibility = "visible";
 }
 
+/*hides high scores table when back button is clicked*/
 function hideScoreboardTable(){
     document.getElementById("scoreboard_table").style.visibility = "hidden";
 }
 
+/*makes credits table visible when credits button is clicked*/
 function showCreditsTable(){
     document.getElementById("credits_table").style.visibility = "visible";
 }
 
+/*hodes credits table when back button is clicked*/
 function hideCreditsTable(){
     document.getElementById("credits_table").style.visibility = "hidden";
 }
@@ -1812,7 +1856,8 @@ function showIDPrompt(){
     document.getElementById('IDPrompt').className = "visible";
 }
 
-//hides top and bottom game tables for when game ends
+/*hides prompt for PittID after checking for validity in getPittID method*/
 function hideIDPrompt(){
     document.getElementById('IDPrompt').className = "hidden";
 }
+/************************************End Menu Functions************************************/
