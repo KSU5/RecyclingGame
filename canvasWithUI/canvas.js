@@ -1,16 +1,3 @@
-
-//event listeners for key presses
-document.addEventListener("keydown",key_down_handler,false);
-document.addEventListener("keyup",key_up_handler,false);
-document.addEventListener("keypress",key_press_handler,false);
-
-window.addEventListener("keydown", function(e) {
-    // space and arrow keys
-    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
-        e.preventDefault();
-    }
-}, false);
-
 //all audio objects for different sounds/game music
 var gameMusic = new Audio("all assets/sound effects/game sound.mp3");
 gameMusic.loop = true;
@@ -230,24 +217,9 @@ var gameRunning = false;
 var leftMostCol = 0;
 var rightMostCol = 9;
 
-
-
-
+/************************************Database Functions************************************/
 var DB = firebase.database();
 
-function writeUserData(userId, TS) {
-    //firebase.database()
-    DB.ref('users/' + userId).set(TS);
-
-    var scoreString = TS + "_" + userId;
-
-    /* DB.ref('scores/' + scoreString).set({
-        username: userId,
-        topscore: TS
-      }); */
-  }
-
-/************************************Database Functions************************************/
 var top3;
 var userHigh;
 
@@ -256,6 +228,11 @@ var sortedNames = [];
 
 var top3Low;
 
+function writeUserData(userId, TS) {
+    //firebase.database()
+    DB.ref('users/' + userId).set(TS);
+  }
+
 function getTop3(){
     var top3Promise = DB.ref('users').orderByValue().limitToLast(3).once('value').then((snapshot) => {;
     top3 = snapshot.val();
@@ -263,9 +240,6 @@ function getTop3(){
     hideMenuTable();
     fillHighScores();
     showScoreboardTable();
-    //console.log(snapshot.val());
-    //console.log(Object.keys(top3));
-    //console.log(top3);
 });
 
 }
@@ -300,7 +274,6 @@ function adjustTop3(userId, newTS){
     else{
         ind = -1;
     }
-    //console.log(ind);
     
     //if users top score in top scores
     if(ind>=0){
@@ -370,15 +343,24 @@ function adjustTop3(userId, newTS){
     top3Low = sortedScores[2];
 }
 
-//getTop3();
-
 function getTS(userId){
     firebase.database().ref('/users/' + userId).once('value').then((snapshot) => {
         userHigh = snapshot.val() || 0;
-        //console.log(userHigh);
       });
 }
 /************************************End Database Functions************************************/
+
+//event listeners for key presses
+document.addEventListener("keydown",key_down_handler,false);
+document.addEventListener("keyup",key_up_handler,false);
+document.addEventListener("keypress",key_press_handler,false);
+
+window.addEventListener("keydown", function(e) {
+    // space and arrow keys
+    if([32, 37, 38, 39, 40].indexOf(e.keyCode) > -1) {
+        e.preventDefault();
+    }
+}, false);
 
 function key_down_handler(event){
     if(gameRunning){
